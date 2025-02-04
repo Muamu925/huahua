@@ -1,7 +1,7 @@
 <div align="center">
-  <a href="https://crypko.ai/crypko/5k8HyUVTq5421/">
-  <img src=".github/hua_nobg_512.gif" alt="椛" width = "400">
-  </a><br>
+  <img src=".github/hua_nobg_512.gif" alt="椛" width = "256">
+  <img src="https://github.com/FloatTech/ZeroBot-Plugin/assets/41315874/93fb795d-e519-45a6-a654-076fd6ac54ae" alt="zbp-uwu" width = "400">
+  <br>
 
   <h1>ZeroBot-Plugin</h1>
 
@@ -10,84 +10,90 @@
   ZeroBot-Plugin 是 ZeroBot 的 实用插件合集<br><br>
 
 
-  <img src="http://cmoe.azurewebsites.net/cmoe?name=ZeroBot-Plugin&theme=r34" /><br>
+  <img src="https://counter.seku.su/cmoe?name=ZeroBot-Plugin&theme=r34" /><br>
 
   [![miraigo](https://img.shields.io/badge/OneBot-MiraiGo-green.svg?style=social&logo=appveyor)](https://github.com/Mrs4s/MiraiGo)
   [![oicq](https://img.shields.io/badge/OneBot-OICQ-green.svg?style=social&logo=appveyor)](https://github.com/takayama-lily/oicq)
   [![mirai](https://img.shields.io/badge/OneBot-Mirai-green.svg?style=social&logo=appveyor)](https://github.com/mamoe/mirai)
 
+
+
   [![go](https://goreportcard.com/badge/github.com/FloatTech/ZeroBot-Plugin?style=flat-square&logo=go)](https://goreportcard.com/badge/github.com/FloatTech/ZeroBot-Plugin)
   [![onebot](https://img.shields.io/badge/onebot-v11-black?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABwCAMAAADxPgR5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRF////29vbr6+vAAAAk1hCcwAAAAR0Uk5T////AEAqqfQAAAKcSURBVHja7NrbctswDATQXfD//zlpO7FlmwAWIOnOtNaTM5JwDMa8E+PNFz7g3waJ24fviyDPgfhz8fHP39cBcBL9KoJbQUxjA2iYqHL3FAnvzhL4GtVNUcoSZe6eSHizBcK5LL7dBr2AUZlev1ARRHCljzRALIEog6H3U6bCIyqIZdAT0eBuJYaGiJaHSjmkYIZd+qSGWAQnIaz2OArVnX6vrItQvbhZJtVGB5qX9wKqCMkb9W7aexfCO/rwQRBzsDIsYx4AOz0nhAtWu7bqkEQBO0Pr+Ftjt5fFCUEbm0Sbgdu8WSgJ5NgH2iu46R/o1UcBXJsFusWF/QUaz3RwJMEgngfaGGdSxJkE/Yg4lOBryBiMwvAhZrVMUUvwqU7F05b5WLaUIN4M4hRocQQRnEedgsn7TZB3UCpRrIJwQfqvGwsg18EnI2uSVNC8t+0QmMXogvbPg/xk+Mnw/6kW/rraUlvqgmFreAA09xW5t0AFlHrQZ3CsgvZm0FbHNKyBmheBKIF2cCA8A600aHPmFtRB1XvMsJAiza7LpPog0UJwccKdzw8rdf8MyN2ePYF896LC5hTzdZqxb6VNXInaupARLDNBWgI8spq4T0Qb5H4vWfPmHo8OyB1ito+AysNNz0oglj1U955sjUN9d41LnrX2D/u7eRwxyOaOpfyevCWbTgDEoilsOnu7zsKhjRCsnD/QzhdkYLBLXjiK4f3UWmcx2M7PO21CKVTH84638NTplt6JIQH0ZwCNuiWAfvuLhdrcOYPVO9eW3A67l7hZtgaY9GZo9AFc6cryjoeFBIWeU+npnk/nLE0OxCHL1eQsc1IciehjpJv5mqCsjeopaH6r15/MrxNnVhu7tmcslay2gO2Z1QfcfX0JMACG41/u0RrI9QAAAABJRU5ErkJggg==)](https://t.me/zerobotplugin)
-  [![zerobot](https://img.shields.io/badge/zerobot-v1.6.6-black?style=flat-square&logo=go)](https://github.com/wdvxdr1123/ZeroBot)
+  [![zerobot](https://img.shields.io/badge/zerobot-v1.8.0-black?style=flat-square&logo=go)](https://github.com/wdvxdr1123/ZeroBot)
+
+
+  
   [![license](https://img.shields.io/github/license/FloatTech/ZeroBot-Plugin.svg?style=flat-square&logo=gnu)](https://raw.githubusercontent.com/FloatTech/ZeroBot-Plugin/master/LICENSE)
-  [![tencent-qq](https://img.shields.io/badge/group-1048452984-red?style=flat-square&logo=tencent-qq)](https://jq.qq.com/?_wv=1027&k=QMb7x1mM)
+  [![tencent-qq](https://img.shields.io/badge/%E7%BE%A4-1048452984-red?style=flat-square&logo=tencent-qq)](https://jq.qq.com/?_wv=1027&k=QMb7x1mM)
+  [![tencent-guild](https://img.shields.io/badge/%E9%A2%91%E9%81%93-Zer0BotPlugin-yellow?style=flat-square&logo=tencent-qq)](https://pd.qq.com/s/fjkx81mnr)
   [![telegram](https://img.shields.io/badge/Telegram-click%20me-informational?style=flat-square&logo=telegram)](https://t.me/zerobotplugin)
 
   本项目符合 [OneBot](https://github.com/howmanybots/onebot) 标准，可基于以下项目与机器人框架/平台进行交互
-  | 项目地址 | 平台 | 核心作者 |
-  | --- | --- | --- |
-  | [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) | [MiraiGo](https://github.com/Mrs4s/MiraiGo) | Mrs4s |
-  | [onebot-kotlin](https://github.com/yyuueexxiinngg/onebot-kotlin) | [Mirai](https://github.com/mamoe/mirai) | yyuueexxiinngg |
-  | [oicq/http-api](https://github.com/takayama-lily/oicq/tree/master/http-api) | [OICQ](https://github.com/takayama-lily/oicq) | takayama |
+  | 项目地址 | 平台 | 核心作者 | 备注 |
+  | :---: | :---: | :---: | :---: |
+  | [LLOneBot](https://github.com/LLOneBot/LLOneBot) | NTQQ | linyuchen | 目前推荐使用 |
+  | [go-cqhttp](https://github.com/Mrs4s/go-cqhttp) | [MiraiGo](https://github.com/Mrs4s/MiraiGo) | Mrs4s | 因签名原因不再维护 |
+  | [onebot-kotlin](https://github.com/yyuueexxiinngg/onebot-kotlin) | [Mirai](https://github.com/mamoe/mirai) | yyuueexxiinngg | 不再积极维护 |
+  | [oicq/http-api](https://github.com/takayama-lily/oicq/tree/master/http-api) | [OICQ](https://github.com/takayama-lily/oicq) | takayama | 已归档不再维护 |
 
   [![Star Trend](https://api.star-history.com/svg?repos=FloatTech/ZeroBot-Plugin&type=Timeline)](https://seladb.github.io/StarTrack-js/#/preload?r=FloatTech,ZeroBot-Plugin)
 
 </div>
 
-> 如果您不知道什么是 [OneBot](https://github.com/howmanybots/onebot) 或不希望运行多个程序，还可以直接前往 [gocqzbp](https://github.com/FloatTech/gocqzbp) 的 [Release](https://github.com/FloatTech/gocqzbp/releases) 页面下载单一可执行文件或前往 [Packages](https://github.com/FloatTech/gocqzbp/pkgs/container/gocqzbp) 页面使用`docker`，运行后按提示登录即可。
+> 专为[后 go-cqhttp 时代](https://github.com/Mrs4s/go-cqhttp/issues/2471)开发迁移的`类zbp`新机器人现已出炉，基于官方api，稳定不风控: [NanoBot-Plugin](https://github.com/FloatTech/NanoBot-Plugin)
 
 > 如果您对开发插件感兴趣，欢迎加入[ZeroBot-Plugin-Playground](https://github.com/FloatTech/ZeroBot-Plugin-Playground)
+
+> webui持续开发中, 欢迎加入[ZeroBot-Plugin-Webui](https://github.com/FloatTech/ZeroBot-Plugin-Webui)
 
 ## 命令行参数
 > `[]`代表是可选参数
 ```bash
-zerobot [-h] [-n nickname] [-t token] [-u url] [-p prefix] [-d|w] [-c|s config.json] [-l latency] [-r ringlen] [-x max process time] [qq1 qq2 qq3 ...] [&]
+zerobot [-h] [-m] [-n nickname] [-t token] [-u url] [-g url] [-p prefix] [-d|w] [-c|s config.json] [-l latency] [-r ringlen] [-x max process time] [-mirror] [qq1 qq2 qq3 ...] [&]
 ```
 - **-h**: 显示帮助
+- **-m**: 不自动标记消息为已读
 - **-n nickname**: 设置默认昵称，默认为`椛椛`
 - **-t token**: 设置`AccessToken`，默认为空
 - **-u url**: 设置`Url`，默认为`ws://127.0.0.1:6700`
+- ~~**-g url**~~(默认禁用): 设置`webui url`，默认为`127.0.0.1:3000`
 - **-p prefix**: 设置命令前缀，默认为`/`
 - **-d|w**: 开启 debug | warning 级别及以上日志输出
 - **-c config.json**: 从`config.json`加载`bot`配置
 - **-s config.json**: 保存现在`bot`配置到`config.json`
 - **-l latency**: 全局处理延时 (ms)
-- **-r ringlen**: 接收消息环缓冲区大小
+- **-r ringlen**: 接收消息环缓冲区大小，`0`为不设缓冲，并发处理
 - **-x max process time**: 最大处理时间 (min)
+- **-mirror**: 直接使用镜像懒加载数据站而不尝试访问源站
 - **qqs**: superusers 的 qq 号
 - **&**: 驻留在后台，必须放在最后，仅`Linux`下有效
 
 默认配置文件格式如下。当选择从配置文件加载时，将忽略相应命令行参数。
 ```json
 {
-    "zero": {
-        "nickname": [
-            "椛椛",
-            "ATRI",
-            "atri",
-            "亚托莉",
-            "アトリ"
-        ],
-        "command_prefix": "/",
-        "super_users": [],
-        "ring_len": 4096,
-        "latency": 233000000,
-        "max_process_time": 240000000000
-    },
-    "ws": [
-        {
-            "Url": "ws://127.0.0.1:6700",
-            "AccessToken": ""
-        }
-    ],
-    "wss": null
+  "zero": {
+    "nickname": ["椛椛", "ATRI", "atri", "亚托莉", "アトリ"],
+    "command_prefix": "/",
+    "super_users": [],
+    "ring_len": 4096,
+    "latency": 233000000,
+    "max_process_time": 240000000000,
+    "mark_message": true
+  },
+  "ws": [{ "Url": "ws://127.0.0.1:6700", "AccessToken": "" }],
+  "wss": null
 }
 ```
 
 ## 功能
 > 在编译时，以下功能除插件控制外，均可通过注释`main.go`中的相应`import`而物理禁用，减小插件体积。
+
 > 通过插件控制，还可动态管理某个功能在某个群的打开/关闭。
-> 插件的优先级为`import`的先后顺序
+
+> 插件的优先级为`import`的先后顺序。
+
+> `webui`默认禁用不编译，打开后会增加程序体积。
 
 <details>
   <summary>插件控制</summary>
@@ -103,6 +109,10 @@ zerobot [-h] [-n nickname] [-t token] [-u url] [-p prefix] [-d|w] [-c|s config.j
   - [x] /启用 xxx (在发送的群/用户启用xxx)
 
   - [x] /禁用 xxx (在发送的群/用户禁用xxx)
+
+  - [x] /此处启用所有插件
+
+  - [x] /此处禁用所有插件
 
   - [x] /全局启用 xxx
 
@@ -126,9 +136,14 @@ zerobot [-h] [-n nickname] [-t token] [-u url] [-p prefix] [-d|w] [-c|s config.j
 
   - [x] /服务列表
 
-  - [x] /设置服务列表显示行数 xx
+  - [x] /设置服务列表显示行数 xx (默认值为 9, 该设置仅运行时有效, zbp 重启后重置)
 
-	默认值为9,该设置仅运行时有效,zbp重启后重置
+  - [x] (默认禁用) /设置webui用户名 zerobot 密码 123456
+
+  - [x] (默认禁用) /webui启动
+
+  - [x] (默认禁用) /webui停止
+
   - [x] @Bot 插件冲突检测 (会在本群发送一条消息并在约 1s 后撤回以检测其它同类 bot 中已启用的插件并禁用)
 
 </details>
@@ -158,6 +173,16 @@ zerobot [-h] [-n nickname] [-t token] [-u url] [-p prefix] [-d|w] [-c|s config.j
   - [x] 群温度
 
   - [x] 设置温度[正整数]
+
+</details>
+<details>
+  <summary>聊天时长统计</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/chatcount"`
+
+  - [x] 查询水群@xxx
+
+  - [x] 查看水群排名
 
 </details>
 <details>
@@ -228,6 +253,8 @@ zerobot [-h] [-n nickname] [-t token] [-u url] [-p prefix] [-d|w] [-c|s config.j
   - [x] 列出所有提醒
 
   - [x] 翻牌
+  
+  - [x] 赞我
 
   - [x] [开启 | 关闭]入群验证
 
@@ -248,15 +275,6 @@ zerobot [-h] [-n nickname] [-t token] [-u url] [-p prefix] [-d|w] [-c|s config.j
   - 注：使用gist加群自动审批，请在群介绍添加以下说明，同时开启`需要回答问题并由管理员审核`：加群请在github新建一个gist，其文件名为本群群号的字符串的md5(小写)，内容为一行，是当前unix时间戳(10分钟内有效)。然后请将您的用户名和gist哈希(小写)按照username/gisthash的格式填写到回答即可。
 
   - 设置欢迎语可选添加参数说明：{at}可在发送时艾特被欢迎者 {nickname}是被欢迎者名字 {avatar}是被欢迎者头像 {uid}是被欢迎者QQ号 {gid}是当前群群号 {groupname} 是当前群群名
-
-</details>
-<details>
-  <summary>词典匹配回复</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/thesaurus"`
-
-  - [x] 切换[kimo|傲娇|可爱]词库
-  - [x] 设置词库触发概率0.x (0<x<9)
 
 </details>
 <details>
@@ -368,30 +386,6 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>ai绘图</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/aipaint"`
-
-  - [x] [ ai绘图 | 生成色图 | 生成涩图 | ai画图 ] xxx
-
-  - [x] [ ai高级绘图 | 高级生成色图 | 高级生成涩图 | ai高级画图 ] xxx
-
-  - [x] [ 以图绘图 | 以图生图 | 以图画图 ] xxx [图片]|@xxx|[qq号]
-  
-  - [x] 设置ai绘图配置 [server] [token]
-  
-  - [x] 设置ai绘图撤回时间90s
-  
-  - [x] 查看ai绘图配置
-  
-  例: 设置ai绘图配置 http://91.216.169.75:5010 abc
-
-  参考服务器 http://91.217.139.190:5010, http://91.216.169.75:5010, http://185.80.202.180:5010
-
-  通过 http://91.217.139.190:5010/token 获取token
-
-</details>
-<details>
   <summary>AIWife</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/aiwife"`
@@ -408,6 +402,14 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>触发者撤回时也自动撤回</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/autowithdraw"`
+
+  - [x] 撤回一条消息
+
+</details>
+<details>
   <summary>base16384加解密</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/b14"`
@@ -419,14 +421,6 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 用yyy加密xxx
 
   - [x] 用yyy解密xxx
-
-</details>
-<details>
-  <summary>百度一下</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/baidu"`
-
-  - [x] 百度下[xxx]
 
 </details>
 <details>
@@ -545,7 +539,7 @@ print("run[CQ:image,file="+j["img"]+"]")
   
   - [x] b站推送列表
   
-  - [x] 拉取b站推送 (使用job执行定时任务------记录在"@every 10s"触发的指令) 
+  - [x] 拉取b站推送 (使用job执行定时任务------记录在"@every 5m"触发的指令) 
 
 </details>
 <details>
@@ -556,24 +550,6 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 书评[xxx]
 
   - [x] 随机书评
-
-</details>
-<details>
-  <summary>打断复读</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/breakrepeat"`
-
-  - [x] (打断三次以上的复读)
-
-</details>
-<details>
-  <summary>藏头诗</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/cangtoushi"`
-
-  - [x] 藏头诗[xxx]
-
-  - [x] 藏尾诗[xxx]
 
 </details>
 <details>
@@ -619,6 +595,14 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>今日早报</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/dailynews"`
+
+  - [x] 今日早报
+
+</details>
+<details>
   <summary>DeepDanbooru二次元图标签识别</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/danbooru"`
@@ -639,17 +623,31 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>女装</summary>
+  <summary>程序员做饭指南</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/dress"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/dish"`
 
-  - [x] 女装
+  - [x] 怎么做 | 烹饪[菜名]
 
-  - [x] 男装
+  - [x] 随机菜谱 | 随便做点菜
+
+</details>
+<details>
+  <summary>多功能抽签</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/drawlots"`
+
+  支持图包文件夹和gif抽签
+
+  - [x] (刷新)抽签列表
   
-  - [x] 随机女装
+  - [x] 抽[签名]签
   
-  - [x] 随机男装
+  - [x] 看签[gif签名]
+	
+  - [x] 加签[签名][gif图片]
+	
+  - [x] 删签[gif签名]
 
 </details>
 <details>
@@ -671,11 +669,13 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>城市疫情查询</summary>
+  <summary>颜文字抽象转写</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/epidemic"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/emozi"`
 
-  - [x] xxx疫情
+  - [x] 抽象转写[文段]
+  - [x] 抽象还原[文段]
+  - [x] 抽象登录[用户名]
 
 </details>
 <details>
@@ -695,7 +695,8 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/font"`
 
-  - [x] (用[终末体|终末变体|紫罗兰体|樱酥体|Consolas体|苹方体])渲染文字xxx
+  - [x] (用[终末体|终末变体|紫罗兰体|樱酥体|Consolas体|粗苹方体|未来荧黑体|Gugi体|八丸体|Impact体|猫啃体|苹方体])渲染(抖动)文字xxx
+
 </details>
 <details>
   <summary>每日运势</summary>
@@ -704,7 +705,7 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   - [x] 运势 | 抽签
 
-  - [x] 设置底图[车万 DC4 爱因斯坦 星空列车 樱云之恋 富婆妹 李清歌 公主连结 原神 明日方舟 碧蓝航线 碧蓝幻想 战双 阴阳师 赛马娘 东方归言录 奇异恩典 夏日口袋 ASoul]
+  - [x] 设置底图[车万 DC4 爱因斯坦 星空列车 樱云之恋 富婆妹 李清歌 公主连结 原神 明日方舟 碧蓝航线 碧蓝幻想 战双 阴阳师 赛马娘 东方归言录 奇异恩典 夏日口袋 ASoul Hololive]
 
 </details>
 <details>
@@ -783,11 +784,13 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>黑丝</summary>
+  <summary>一言</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/heisi"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/hitokoto"`
 
-  - [x] 来点黑丝/白丝/jk/巨乳/足控/网红
+  - [x] 一言[xxx]
+  
+  - [x] 系列一言
 
 </details>
 <details>
@@ -813,14 +816,6 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>关键字搜图</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/image_finder"`
-
-  - [x] 来张 [xxx]
-
-</details>
-<details>
   <summary>注入指令</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/inject"`
@@ -836,24 +831,6 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 来份[屌|弔|吊]图
 
   - [x] 更新[屌|弔|吊]图
-
-  </details>
-<details>
-  <summary>兽语加密(嗷呜~)</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/jiami"`
-
-  - [x] 兽语加密xxx
-
-  - [x] 兽语解密xxx
-
-</details>
-<details>
-  <summary>小鸡词典</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/jikipedia"`
-
-  - [x] [查梗|小鸡词典][梗]
 
 </details>
 <details>
@@ -871,11 +848,23 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>绝绝子</summary>
+  <summary>疯狂星期四</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/juejuezi"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/kfccrazythursday"`
 
-  - [x] 喝奶茶绝绝子 | 绝绝子吃饭
+  - [x] 疯狂星期四
+
+</details>
+<details>
+  <summary>kokomi原神面板</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/kokomi"`
+
+  - [x] kokomi菜单
+
+  - [x] XX面板
+
+  - 注:本插件未并入主仓库,需自行安装(须源码方式运行才能添加插件),安装地址[kokomi-原神面板查询插件](https://github.com/lianhong2758/kokomi-plugin) 
 
 </details>
 <details>
@@ -897,11 +886,46 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>桑帛云 API</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/lolimi"`
+
+  - [x] 随机妹子
+
+  - [x] 随机绕口令
+
+  - [x] 颜值鉴定[图片]
+  
+  - [x] 随机情话
+
+  - [x] 发病 嘉然
+
+  - [x] 让[嘉然|塔菲|东雪莲|懒羊羊|科比|孙笑川|陈泽|丁真|空|荧|派蒙|纳西妲|阿贝多|温迪|枫原万叶|钟离|荒泷一斗|八重神子|艾尔海森|提纳里|迪希雅|卡维|宵宫|莱依拉|赛诺|诺艾尔|托马|凝光|莫娜|北斗|神里绫华|雷电将军|芭芭拉|鹿野院平藏|五郎|迪奥娜|凯亚|安柏|班尼特|琴|柯莱|夜兰|妮露|辛焱|珐露珊|魈|香菱|达达利亚|砂糖|早柚|云堇|刻晴|丽莎|迪卢克|烟绯|重云|珊瑚宫心海|胡桃|可莉|流浪者|久岐忍|神里绫人|甘雨|戴因斯雷布|优菈|菲谢尔|行秋|白术|九条裟罗|雷泽|申鹤|迪娜泽黛|凯瑟琳|多莉|坎蒂丝|萍姥姥|罗莎莉亚|留云借风真君|绮良良|瑶瑶|七七|奥兹|米卡|夏洛蒂|埃洛伊|博士|女士|大慈树王|三月七|娜塔莎|希露瓦|虎克|克拉拉|丹恒|希儿|布洛妮娅|瓦尔特|杰帕德|佩拉|姬子|艾丝妲|白露|星|穹|桑博|伦纳德|停云|罗刹|卡芙卡|彦卿|史瓦罗|螺丝咕姆|阿兰|银狼|素裳|丹枢|黑塔|景元|帕姆|可可利亚|半夏|符玄|公输师傅|奥列格|青雀|大毫|青镞|费斯曼|绿芙蓉|镜流|信使|丽塔|失落迷迭|缭乱星棘|伊甸|伏特加女孩|狂热蓝调|莉莉娅|萝莎莉娅|八重樱|八重霞|卡莲|第六夜想曲|卡萝尔|姬子|极地战刃|布洛妮娅|次生银翼|理之律者|真理之律者|迷城骇兔|希儿|魇夜星渊|黑希儿|帕朵菲莉丝|天元骑英|幽兰黛尔|德丽莎|月下初拥|朔夜观星|暮光骑士|明日香|李素裳|格蕾修|梅比乌斯|渡鸦|人之律者|爱莉希雅|爱衣|天穹游侠|琪亚娜|空之律者|终焉之律者|薪炎之律者|云墨丹心|符华|识之律者|维尔薇|始源之律者|芽衣|雷之律者|苏莎娜|阿波尼亚|陆景和|莫弈|夏彦|左然]说我测尼玛
+
+</details>
+<details>
   <summary>MagicPrompt-Stable-Diffusion吟唱提示</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/magicprompt"`
 
   - [x] 吟唱提示[xxxx]
+
+</details>
+<details>
+  <summary>钓鱼模拟器</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/mcfish"`
+
+  - [x] 钓鱼商店
+  - [x] 购买xxx [数量]
+  - [x] 出售[xxx [数量]|所有垃圾]
+  - [x] 钓鱼背包
+  - [x] 装备[xx竿|三叉戟|美西螈]
+  - [x] 附魔[诱钓|海之眷顾]
+  - [x] 修复鱼竿
+  - [x] 合成[xx竿|三叉戟]
+  - [x] 进行钓鱼
+  - [x] 进行n次钓鱼
 
 </details>
 <details>
@@ -924,18 +948,6 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 注: 该插件需要安装timidity, linux安装脚本可参考 https://gitcode.net/anto_july/midi/-/raw/master/timidity.sh, windows安装脚本可参考 https://gitcode.net/anto_july/midi/-/raw/master/timidity.bat?inline=false, windows需要管理员模式运行
   
   - [x] 符号说明: C5是中央C,后面不写数字,默认接5,Cb6<1,b代表降调,#代表升调,6比5高八度,<1代表音长×2,<3代表音长×8,<-1代表音长×0.5,<-3代表音长×0.125,R是休止符
-
-</details>
-<details>
-  <summary>日韩 VITS 模型拟声</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/moegoe"`
-
-  - [x] 让[宁宁|爱瑠|芳乃|茉子|丛雨|小春|七海]说(日语)
-
-  - [x] 让[수아|미미르|아린|연화|유화|선배]说(韩语)
-
-  - [x] 让[派蒙|空|荧|阿贝多|枫原万叶|温迪|八重神子|纳西妲|钟离|诺艾尔|凝光|托马|北斗|莫娜|荒泷一斗|提纳里|芭芭拉|艾尔海森|雷电将军|赛诺|琴|班尼特|五郎|神里绫华|迪希雅|夜兰|辛焱|安柏|宵宫|云堇|妮露|烟绯|鹿野院平藏|凯亚|达达利亚|迪卢克|可莉|早柚|香菱|重云|刻晴|久岐忍|珊瑚宫心海|迪奥娜|戴因斯雷布|魈|神里绫人|丽莎|优菈|凯瑟琳|雷泽|菲谢尔|九条裟罗|甘雨|行秋|胡桃|迪娜泽黛|柯莱|申鹤|砂糖|萍姥姥|奥兹|罗莎莉亚|式大将|哲平|坎蒂丝|托克|留云借风真君|昆钧|塞琉斯|多莉|大肉丸|莱依拉|散兵|拉赫曼|杜拉夫|阿守|玛乔丽|纳比尔|海芭夏|九条镰治|阿娜耶|阿晃|阿扎尔|七七|博士|白术|埃洛伊|大慈树王|女士|丽塔|失落迷迭|缭乱星棘|伊甸|伏特加女孩|狂热蓝调|莉莉娅|萝莎莉娅|八重樱|八重霞|卡莲|第六夜想曲|卡萝尔|姬子|极地战刃|布洛妮娅|次生银翼|理之律者|迷城骇兔|希儿|魇夜星渊|黑希儿|帕朵菲莉丝|天元骑英|幽兰黛尔|德丽莎|月下初拥|朔夜观星|暮光骑士|明日香|李素裳|格蕾修|梅比乌斯|渡鸦|人之律者|爱莉希雅|爱衣|天穹游侠|琪亚娜|空之律者|薪炎之律者|云墨丹心|符华|识之律者|维尔薇|芽衣|雷之律者|阿波尼亚]说(中文)
 
 </details>
 <details>
@@ -1001,22 +1013,6 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>抽wife</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/nativewife"`
-
-  - [x] 抽wife[@xxx]
-
-  - [x] 添加wife[名字][图片]
-
-  - [x] 删除wife[名字]
-
-  - [x] [让 | 不让]所有人均可添加wife
-
-  - 注：不同群添加后不会重叠
-
-</details>
-<details>
   <summary>拼音首字母释义工具</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/nbnhhsh"`
@@ -1035,11 +1031,51 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>牛牛大作战</summary>
+
+`import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/niuniu" `
+
+- [x] 打胶
+
+- [x] 使用[道具名称]打胶
+
+- [x] jj[@xxx]
+
+- [x] 使用[道具名称]jj[@xxx]
+
+- [x] 赎牛牛
+
+- [x] 牛牛拍卖行
+
+- [x] 出售牛牛
+
+- [x] 牛牛商店
+
+- [x] 牛牛背包
+
+- [x] 注册牛牛
+
+- [x] 注销牛牛
+
+- [x] 牛子长度排行
+
+- [x] 牛子深度排行
+
+- [x] 查看我的牛牛
+
+</details>
+<details>
   <summary>小说</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/novel" `
 
   - [x] 小说[xxx]
+
+  - 设置小说配置 zerobot 123456
+
+  - 下载小说30298
+
+  - 注: 建议去https://www.23qb.com/ 注册一个账号, 小说下载有积分限制
 
 </details>
 <details>
@@ -1053,6 +1089,22 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>抽wife</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/nwife"`
+
+  - [x] 抽wife[@xxx]
+
+  - [x] 添加wife[名字][图片]
+
+  - [x] 删除wife[名字]
+
+  - [x] [让 | 不让]所有人均可添加wife
+
+  - 注：不同群添加后不会重叠
+
+</details>
+<details>
   <summary>浅草寺求签</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/omikuji"`
@@ -1060,6 +1112,14 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 求签 | 占卜
 
   - [x] 解签
+
+</details>
+<details>
+  <summary>抽扑克</summary>
+  
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/poker"`
+
+  - [x] 抽扑克牌
 
 </details>
 <details>
@@ -1092,18 +1152,6 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 好感度列表
 
   - [x] 重置花名册
-
-</details>
-<details>
-  <summary>权重查询</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/quan"`
-
-  - 来看看大家的账号分吧~据说越高越不容易封号哦
-
-  - [x] 权重查询+@xxx
-
-  - [x] 权重查询+QQ号(为空时匹配触发者QQ)
 
 </details>
 <details>
@@ -1141,6 +1189,14 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
+  <summary>打劫</summary>
+
+`import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/robbery"`
+
+- [x] 打劫[对方Q号|@对方QQ]
+
+</details>
+<details>
   <summary>在线代码运行</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/runcode"`
@@ -1165,20 +1221,13 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>叔叔的AI二次元图片放大</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/scale"`
-
-  - [x] 放大图片[图片]
-
-</details>
-<details>
   <summary>签到得分</summary>
 
 `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/score"` 
 
   - [x] 签到
   - [x] 获得签到背景[@xxx] | 获得签到背景
+  - [x] 设置签到预设(0~3)
   - [x] 查看等级排名
   - 注:跨群排行
   - [x] 查看我的钱包
@@ -1211,9 +1260,25 @@ print("run[CQ:image,file="+j["img"]+"]")
 
   - [x] 卖萌[@xxx]
 
-  - [x] 抽老婆[@xxx]
+  - [x] 今日老婆[@xxx]
 
   - [x] 黄油角色[@xxx]
+
+</details>
+<details>
+  <summary>steam</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/steam"`
+
+  - [x] steam[添加|删除]订阅xxxxx
+
+  - [x] steam查询订阅
+
+  - [x] steam绑定 api key xxxxxxx
+
+  - [x] 查看apikey
+
+  - [x] 拉取steam订阅 (使用job执行定时任务------记录在"@every 1m"触发的指令) 
 
 </details>
 <details>
@@ -1252,14 +1317,6 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>vits猫雷</summary>
-
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/vitsnyaru"`
-
-  - [x] 让猫雷说[xxxx]
-
-</details>
-<details>
   <summary>vtb语录</summary>
 
   `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/vtb_quotation"`
@@ -1272,26 +1329,49 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>网易云音乐热评</summary>
+  <summary>钱包</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wangyiyun"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wallet"`
 
-  - [x] 来份网易云热评
+  - [x] 查看钱包排名
 
-  </details>
+  - [x] 设置硬币名称[ATRI币]
+
+  - [x] 管理钱包余额[+金额|-金额][@xxx]
+
+  - [x] 查看我的钱包|查看钱包余额[@xxx]
+
+  - [x] 钱包转账[金额][@xxx]
+
+  - 注：仅超级用户能"管理钱包余额",
+
+</details>
 <details>
-  <summary>天气/拼音查询-名言</summary>
+  <summary>据意查句</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wenben"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wantquotes"`
 
-  - [x] xx天气
+  - [x] 据意查句 大海
+  
+  - [x] 登录据意查句 
 
-  - [x] xx拼音
+</details>
+<details>
+  <summary>星际战甲</summary>
 
-  - [x] 每日情话/一言/鸡汤
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/warframeapi"`
 
-  - [x] 绕口令
-
+  - [x] wf时间同步
+  
+  - [x] [金星|地球|火卫二]平原状态
+  
+  - [x] .wm [物品名称]
+  
+  - [x] 仲裁
+  
+  - [x] 警报
+  
+  - [x] 每日特惠
 </details>
 <details>
   <summary>百度文心AI</summary>
@@ -1338,19 +1418,11 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>月幕galgame图</summary>
+  <summary>抽老婆</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/ymgal"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wife"`
 
-  - [x] 随机galCG
-
-  - [x] 随机gal表情包
-
-  - [x] galCG[xxx]
-
-  - [x] gal表情包[xxx]
-
-  - [x] 更新gal
+  - [x] 抽老婆
 
 </details>
 <details>
@@ -1373,6 +1445,18 @@ print("run[CQ:image,file="+j["img"]+"]")
   - [x] 团队六阶猜单词
 
   - [x] 团队七阶猜单词
+
+</details>
+<details>
+  <summary>鬼东西</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wtf"`
+
+  - [x] 鬼东西列表
+
+  - [x] 查询鬼东西[序号][@xxx]
+
+  - 注：由于需要科学，默认注释。
 
 </details>
 <details>
@@ -1399,15 +1483,55 @@ print("run[CQ:image,file="+j["img"]+"]")
 	
 </details>
 <details>
-  <summary>鬼东西</summary>
+  <summary>月幕galgame图</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wtf"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/ymgal"`
 
-  - [x] 鬼东西列表
+  - [x] 随机galCG
 
-  - [x] 查询鬼东西[序号][@xxx]
+  - [x] 随机gal表情包
 
-  - 注：由于需要科学，默认注释。
+  - [x] galCG[xxx]
+
+  - [x] gal表情包[xxx]
+
+  - [x] 更新gal
+
+</details>
+<details>
+  <summary>遇见API</summary>
+
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/yujn"`
+  
+  - [x] 小姐姐视频
+  - [x] 小姐姐视频2
+  - [x] 黑丝视频
+  - [x] 白丝视频
+  - [x] 欲梦视频
+  - [x] 甜妹视频
+  - [x] 双倍快乐
+  - [x] 纯情女高
+  - [x] 萝莉视频
+  - [x] 玉足视频
+  - [x] 帅哥视频
+  - [x] 热舞视频
+  - [x] 吊带视频
+  - [x] 汉服视频
+  - [x] 极品狱卒
+  - [x] 清纯视频
+  - [x] 快手变装
+  - [x] 抖音变装
+  - [x] 萌娃视频
+  - [x] 穿搭视频
+  - [x] 完美身材
+  - [x] 御姐撒娇
+  - [x] 绿茶语音
+  - [x] 怼人语音
+  - [x] 随机骚话
+  - [x] 随机污句子
+  - [x] 随机美句
+  - [x] 土味情话   
+  - [x] 让[lulu]说我测尼玛
 
 </details>
 
@@ -1424,21 +1548,20 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 </details>
 <details>
-  <summary>人工智能回复</summary>
+  <summary>词典匹配回复</summary>
 
-  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/ai_reply"`
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/thesaurus"`
 
-  - [x] @Bot 任意文本(任意一句话回复)
+  - [x] 切换[kimo|傲娇|可爱]词库
+  - [x] 设置词库触发概率0.x (0<x<9)
 
-  - [x] 设置回复模式[青云客 | 小爱 | ChatGPT]
+</details>
+<details>
+  <summary>打断复读</summary>
 
-  - [x] 设置 ChatGPT SessionToken xxx
+  `import _ "github.com/FloatTech/ZeroBot-Plugin/plugin/breakrepeat"`
 
-  - [x] 重置ChatGPT连接
-  
-  - 注:
-    - 注册和获取 token 可以参见这两篇文章：[注册](https://www.cnblogs.com/ranxi169/p/16954797.html) [获取token](https://juejin.cn/post/7174088036035067917)
-    - 设置 SessionToken 时，请确保自己为超级管理员，然后私聊`/响应` `/禁用atri` `/禁用tts` `/启用aireply`，再发送`设置 ChatGPT SessionToken xxx`
+  - [x] (打断三次以上的复读)
 
 </details>
 
@@ -1446,8 +1569,7 @@ print("run[CQ:image,file="+j["img"]+"]")
 
 ### 1. 使用稳定版/测试版 (推荐)
 
-可以前往[Release](https://github.com/FloatTech/ZeroBot-Plugin/releases)页面下载对应系统版本可执行文件，编译时开启了全部插件。您还可以选择 [gocqzbp](https://github.com/FloatTech/gocqzbp) 的 [Release](https://github.com/FloatTech/gocqzbp/releases) 或 [Package](https://github.com/FloatTech/gocqzbp/pkgs/container/gocqzbp)，它是 [Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 与本插件的合体。
-
+可以前往[Release](https://github.com/FloatTech/ZeroBot-Plugin/releases)页面下载对应系统版本可执行文件，编译时开启了全部插件。
 ### 2. 本地直接运行
 
 1. 下载安装最新 [Go](https://studygolang.com/dl) 环境

@@ -1,35 +1,37 @@
-// Package score 签到，答题得分
+// Package score 签到
 package score
 
 import (
-	"fmt"
+	"encoding/base64"
+	"errors"
+	"io"
 	"math"
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
-	"github.com/Coloured-glaze/gg"
+	"github.com/FloatTech/AnimeAPI/bilibili"
+	"github.com/FloatTech/AnimeAPI/wallet"
 	"github.com/FloatTech/floatbox/file"
-	"github.com/FloatTech/floatbox/img/writer"
 	"github.com/FloatTech/floatbox/process"
+	"github.com/FloatTech/floatbox/web"
+	"github.com/FloatTech/imgfactory"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
-	"github.com/FloatTech/zbputils/img"
 	"github.com/FloatTech/zbputils/img/text"
 	"github.com/golang/freetype"
 	log "github.com/sirupsen/logrus"
 	"github.com/wcharczuk/go-chart/v2"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
-
-	// 货币系统
-	"github.com/FloatTech/AnimeAPI/wallet"
 )
 
 const (
-	backgroundURL = "https://img.moehu.org/pic.php?id=pc"
+	backgroundURL = "https://pic.re/image"
+	referer       = "https://weibo.com/"
 	signinMax     = 1
 	// SCOREMAX 分数上限定为1200
 	SCOREMAX = 1200
@@ -37,152 +39,148 @@ const (
 
 var (
 	rankArray = [...]int{0, 10, 20, 50, 100, 200, 350, 550, 750, 1000, 1200}
-	engine    = control.Register("score", &ctrl.Options[*zero.Ctx]{
+	engine    = control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault:  false,
 		Brief:             "签到",
-		Help:              "- 签到\n- 获得签到背景[@xxx] | 获得签到背景\n- 查看等级排名\n注:为跨群排名\n- 查看我的钱包\n- 查看钱包排名\n注:为本群排行，若群人数太多不建议使用该功能!!!",
+		Help:              "- 签到\n- 获得签到背景[@xxx] | 获得签到背景\n- 设置签到预设(0~3)\n- 查看等级排名\n注:为跨群排名\n- 查看我的钱包\n- 查看钱包排名\n注:为本群排行，若群人数太多不建议使用该功能!!!",
 		PrivateDataFolder: "score",
 	})
+	styles = []scoredrawer{
+		drawScore15,
+		drawScore16,
+		drawScore17,
+		drawScore17b2,
+	}
 )
 
 func init() {
 	cachePath := engine.DataFolder() + "cache/"
 	go func() {
-		_ = os.RemoveAll(cachePath)
-		err := os.MkdirAll(cachePath, 0755)
-		if err != nil {
-			panic(err)
-		}
 		sdb = initialize(engine.DataFolder() + "score.db")
+		ok := file.IsExist(cachePath)
+		if !ok {
+			err := os.MkdirAll(cachePath, 0777)
+			if err != nil {
+				panic(err)
+			}
+			return
+		}
+		files, err := os.ReadDir(cachePath)
+		if err == nil {
+			for _, f := range files {
+				if !strings.Contains(f.Name(), time.Now().Format("20060102")) {
+					_ = os.Remove(cachePath + f.Name())
+				}
+			}
+		}
 	}()
-	engine.OnFullMatch("签到").Limit(ctxext.LimitByUser).SetBlock(true).
-		Handle(func(ctx *zero.Ctx) {
-			uid := ctx.Event.UserID
-			now := time.Now()
-			today := now.Format("20060102")
-			// 签到图片
-			drawedFile := cachePath + strconv.FormatInt(uid, 10) + today + "signin.png"
-			picFile := cachePath + strconv.FormatInt(uid, 10) + today + ".png"
-			// 获取签到时间
-			si := sdb.GetSignInByUID(uid)
-			siUpdateTimeStr := si.UpdatedAt.Format("20060102")
-			switch {
-			case si.Count >= signinMax && siUpdateTimeStr == today:
-				// 如果签到时间是今天
-				ctx.SendChain(message.Reply(ctx.Event.MessageID), message.Text("今天你已经签到过了！"))
-				if file.IsExist(drawedFile) {
-					ctx.SendChain(message.Image("file:///" + file.BOTPATH + "/" + drawedFile))
-				}
-				return
-			case siUpdateTimeStr != today:
-				// 如果是跨天签到就清数据
-				err := sdb.InsertOrUpdateSignInCountByUID(uid, 0)
-				if err != nil {
-					ctx.SendChain(message.Text("ERROR: ", err))
-					return
-				}
-			}
-			// 更新签到次数
-			err := sdb.InsertOrUpdateSignInCountByUID(uid, si.Count+1)
+	engine.OnRegex(`^签到\s?(\d*)$`).Limit(ctxext.LimitByUser).SetBlock(true).Handle(func(ctx *zero.Ctx) {
+		// 选择key
+		key := ctx.State["regex_matched"].([]string)[1]
+		gid := ctx.Event.GroupID
+		if gid < 0 {
+			// 个人用户设为负数
+			gid = -ctx.Event.UserID
+		}
+		k := uint8(0)
+		if key == "" {
+			k = uint8(ctx.State["manager"].(*ctrl.Control[*zero.Ctx]).GetData(gid))
+		} else {
+			kn, err := strconv.Atoi(key)
 			if err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return
 			}
-			// 更新经验
-			level := sdb.GetScoreByUID(uid).Score + 1
-			if level > SCOREMAX {
-				level = SCOREMAX
-				ctx.SendChain(message.At(uid), message.Text("你的等级已经达到上限"))
+			k = uint8(kn)
+		}
+		if int(k) >= len(styles) {
+			ctx.SendChain(message.Text("ERROR: 未找到签到设定: ", key))
+			return
+		}
+		uid := ctx.Event.UserID
+		today := time.Now().Format("20060102")
+		// 签到图片
+		drawedFile := cachePath + strconv.FormatInt(uid, 10) + today + "signin.png"
+		picFile := cachePath + strconv.FormatInt(uid, 10) + today + ".png"
+		// 获取签到时间
+		si := sdb.GetSignInByUID(uid)
+		siUpdateTimeStr := si.UpdatedAt.Format("20060102")
+		switch {
+		case si.Count >= signinMax && siUpdateTimeStr == today:
+			// 如果签到时间是今天
+			ctx.SendChain(message.Reply(ctx.Event.MessageID), message.Text("今天你已经签到过了！"))
+			if file.IsExist(drawedFile) {
+				trySendImage(drawedFile, ctx)
 			}
-			err = sdb.InsertOrUpdateScoreByUID(uid, level)
+			return
+		case siUpdateTimeStr != today:
+			// 如果是跨天签到就清数据
+			err := sdb.InsertOrUpdateSignInCountByUID(uid, 0)
 			if err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return
 			}
-			// 更新钱包
-			rank := getrank(level)
-			add := 1 + rand.Intn(10) + rank*5 // 等级越高获得的钱越高
-			err = wallet.InsertWalletOf(uid, add)
+		}
+		// 更新签到次数
+		err := sdb.InsertOrUpdateSignInCountByUID(uid, si.Count+1)
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		// 更新经验
+		level := sdb.GetScoreByUID(uid).Score + 1
+		if level > SCOREMAX {
+			level = SCOREMAX
+			ctx.SendChain(message.At(uid), message.Text("你的等级已经达到上限"))
+		}
+		err = sdb.InsertOrUpdateScoreByUID(uid, level)
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		// 更新钱包
+		rank := getrank(level)
+		add := 1 + rand.Intn(10) + rank*5 // 等级越高获得的钱越高
+		err = wallet.InsertWalletOf(uid, add)
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		alldata := &scdata{
+			drawedfile: drawedFile,
+			picfile:    picFile,
+			uid:        uid,
+			nickname:   ctx.CardOrNickName(uid),
+			inc:        add,
+			score:      wallet.GetWalletOf(uid),
+			level:      level,
+			rank:       rank,
+		}
+		drawimage, err := styles[k](alldata)
+		if err != nil {
+			ctx.SendChain(message.Text("签到成功，但签到图生成失败，请勿重复签到:\n", err))
+			return
+		}
+		// done.
+		f, err := os.Create(drawedFile)
+		if err != nil {
+			data, err := imgfactory.ToBytes(drawimage)
 			if err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return
 			}
-			score := wallet.GetWalletOf(uid)
-			// 绘图
-			err = initPic(picFile)
-			if err != nil {
-				ctx.SendChain(message.Text("ERROR: ", err))
-				return
-			}
-			back, err := gg.LoadImage(picFile)
-			if err != nil {
-				ctx.SendChain(message.Text("ERROR: ", err))
-				return
-			}
-			// 避免图片过大，最大 1280*720
-			back = img.Limit(back, 1280, 720)
-			canvas := gg.NewContext(back.Bounds().Size().X, int(float64(back.Bounds().Size().Y)*1.7))
-			canvas.SetRGB(1, 1, 1)
-			canvas.Clear()
-			canvas.DrawImage(back, 0, 0)
-			monthWord := now.Format("01/02")
-			hourWord := getHourWord(now)
-			_, err = file.GetLazyData(text.BoldFontFile, control.Md5File, true)
-			if err != nil {
-				ctx.SendChain(message.Text("ERROR: ", err))
-				return
-			}
-			if err = canvas.LoadFontFace(text.BoldFontFile, float64(back.Bounds().Size().X)*0.1); err != nil {
-				ctx.SendChain(message.Text("ERROR: ", err))
-				return
-			}
-			canvas.SetRGB(0, 0, 0)
-			canvas.DrawString(hourWord, float64(back.Bounds().Size().X)*0.1, float64(back.Bounds().Size().Y)*1.2)
-			canvas.DrawString(monthWord, float64(back.Bounds().Size().X)*0.6, float64(back.Bounds().Size().Y)*1.2)
-			nickName := ctx.CardOrNickName(uid)
-			_, err = file.GetLazyData(text.FontFile, control.Md5File, true)
-			if err != nil {
-				ctx.SendChain(message.Text("ERROR: ", err))
-				return
-			}
-			if err = canvas.LoadFontFace(text.FontFile, float64(back.Bounds().Size().X)*0.04); err != nil {
-				ctx.SendChain(message.Text("ERROR: ", err))
-				return
-			}
-			canvas.DrawString(nickName+fmt.Sprintf(" ATRI币+%d", add), float64(back.Bounds().Size().X)*0.1, float64(back.Bounds().Size().Y)*1.3)
-			canvas.DrawString("当前ATRI币:"+strconv.FormatInt(int64(score), 10), float64(back.Bounds().Size().X)*0.1, float64(back.Bounds().Size().Y)*1.4)
-			canvas.DrawString("LEVEL:"+strconv.FormatInt(int64(rank), 10), float64(back.Bounds().Size().X)*0.1, float64(back.Bounds().Size().Y)*1.5)
-			canvas.DrawRectangle(float64(back.Bounds().Size().X)*0.1, float64(back.Bounds().Size().Y)*1.55, float64(back.Bounds().Size().X)*0.6, float64(back.Bounds().Size().Y)*0.1)
-			canvas.SetRGB255(150, 150, 150)
-			canvas.Fill()
-			var nextrankScore int
-			if rank < 10 {
-				nextrankScore = rankArray[rank+1]
-			} else {
-				nextrankScore = SCOREMAX
-			}
-			canvas.SetRGB255(0, 0, 0)
-			canvas.DrawRectangle(float64(back.Bounds().Size().X)*0.1, float64(back.Bounds().Size().Y)*1.55, float64(back.Bounds().Size().X)*0.6*float64(level)/float64(nextrankScore), float64(back.Bounds().Size().Y)*0.1)
-			canvas.SetRGB255(102, 102, 102)
-			canvas.Fill()
-			canvas.DrawString(fmt.Sprintf("%d/%d", level, nextrankScore), float64(back.Bounds().Size().X)*0.75, float64(back.Bounds().Size().Y)*1.62)
+			ctx.SendChain(message.ImageBytes(data))
+			return
+		}
+		_, err = imgfactory.WriteTo(drawimage, f)
+		defer f.Close()
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		trySendImage(drawedFile, ctx)
+	})
 
-			f, err := os.Create(drawedFile)
-			if err != nil {
-				log.Errorln("[score]", err)
-				data, cl := writer.ToBytes(canvas.Image())
-				ctx.SendChain(message.ImageBytes(data))
-				cl()
-				return
-			}
-			_, err = writer.WriteTo(canvas.Image(), f)
-			_ = f.Close()
-			if err != nil {
-				ctx.SendChain(message.Text("ERROR: ", err))
-				return
-			}
-			ctx.SendChain(message.Image("file:///" + file.BOTPATH + "/" + drawedFile))
-		})
 	engine.OnPrefix("获得签到背景", zero.OnlyGroup).Limit(ctxext.LimitByGroup).SetBlock(true).
 		Handle(func(ctx *zero.Ctx) {
 			param := ctx.State["args"].(string)
@@ -194,17 +192,17 @@ func init() {
 			}
 			picFile := cachePath + uidStr + time.Now().Format("20060102") + ".png"
 			if file.IsNotExist(picFile) {
-				ctx.SendChain(message.Reply(ctx.Event.MessageID), message.Text("请先签到！"))
+				ctx.SendChain(message.Reply(ctx.Event.MessageID), message.Text("签到背景加载失败"))
 				return
 			}
-			ctx.SendChain(message.Image("file:///" + file.BOTPATH + "/" + picFile))
+			trySendImage(picFile, ctx)
 		})
 	engine.OnFullMatch("查看等级排名", zero.OnlyGroup).Limit(ctxext.LimitByGroup).SetBlock(true).
 		Handle(func(ctx *zero.Ctx) {
 			today := time.Now().Format("20060102")
 			drawedFile := cachePath + today + "scoreRank.png"
 			if file.IsExist(drawedFile) {
-				ctx.SendChain(message.Image("file:///" + file.BOTPATH + "/" + drawedFile))
+				trySendImage(drawedFile, ctx)
 				return
 			}
 			st, err := sdb.GetScoreRankByTopN(10)
@@ -269,8 +267,31 @@ func init() {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return
 			}
-			ctx.SendChain(message.Image("file:///" + file.BOTPATH + "/" + drawedFile))
+			trySendImage(drawedFile, ctx)
 		})
+	engine.OnRegex(`^设置签到预设\s*(\d+)$`, zero.SuperUserPermission).Limit(ctxext.LimitByUser).SetBlock(true).Handle(func(ctx *zero.Ctx) {
+		key := ctx.State["regex_matched"].([]string)[1]
+		kn, err := strconv.Atoi(key)
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		k := uint8(kn)
+		if int(k) >= len(styles) {
+			ctx.SendChain(message.Text("ERROR: 未找到签到设定: ", key))
+			return
+		}
+		gid := ctx.Event.GroupID
+		if gid == 0 {
+			gid = -ctx.Event.UserID
+		}
+		err = ctx.State["manager"].(*ctrl.Control[*zero.Ctx]).SetData(gid, int64(k))
+		if err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		ctx.SendChain(message.Text("设置成功"))
+	})
 }
 
 func getHourWord(t time.Time) string {
@@ -302,10 +323,96 @@ func getrank(count int) int {
 	return -1
 }
 
-func initPic(picFile string) error {
-	if file.IsExist(picFile) {
-		return nil
-	}
+func initPic(picFile string, uid int64) (avatar []byte, err error) {
 	defer process.SleepAbout1sTo2s()
-	return file.DownloadTo(backgroundURL, picFile)
+	avatar, err = web.GetData("https://q4.qlogo.cn/g?b=qq&nk=" + strconv.FormatInt(uid, 10) + "&s=640")
+	if err != nil {
+		return
+	}
+	if file.IsExist(picFile) {
+		return
+	}
+	url, err := bilibili.GetRealURL(backgroundURL)
+	if err == nil {
+		data, err := web.RequestDataWith(web.NewDefaultClient(), url, "", referer, "", nil)
+		if err == nil {
+			return avatar, os.WriteFile(picFile, data, 0644)
+		}
+	}
+	// 获取网络图片失败，使用本地已有的图片
+	log.Error("[score:get online img error]:", err)
+	return avatar, copyImage(picFile)
+}
+
+// 使用"file:"发送图片失败后，改用base64发送
+func trySendImage(filePath string, ctx *zero.Ctx) {
+	filePath = file.BOTPATH + "/" + filePath
+	if id := ctx.SendChain(message.Image("file:///" + filePath)); id.ID() != 0 {
+		return
+	}
+	imgFile, err := os.Open(filePath)
+	if err != nil {
+		ctx.SendChain(message.Text("ERROR: 无法打开文件", err))
+		return
+	}
+	defer imgFile.Close()
+	// 使用 base64.NewEncoder 将文件内容编码为 base64 字符串
+	var encodedFileData strings.Builder
+	encodedFileData.WriteString("base64://")
+	encoder := base64.NewEncoder(base64.StdEncoding, &encodedFileData)
+	_, err = io.Copy(encoder, imgFile)
+	if err != nil {
+		ctx.SendChain(message.Text("ERROR: 无法编码文件内容", err))
+		return
+	}
+	encoder.Close()
+	drawedFileBase64 := encodedFileData.String()
+	if id := ctx.SendChain(message.Image(drawedFileBase64)); id.ID() == 0 {
+		ctx.SendChain(message.Text("ERROR: 无法读取图片文件", err))
+		return
+	}
+}
+
+// 从已有签到背景中，复制出一张图片
+func copyImage(picFile string) (err error) {
+	// 读取目录中的文件列表,并随机挑选出一张图片
+	cachePath := engine.DataFolder() + "cache/"
+	files, err := os.ReadDir(cachePath)
+	if err != nil {
+		return err
+	}
+
+	// 随机取10次图片，取到图片就break退出
+	imgNum := len(files)
+	var validFile string
+	for i := 0; i < len(files) && i < 10; i++ {
+		imgFile := files[rand.Intn(imgNum)]
+		if !imgFile.IsDir() && strings.HasSuffix(imgFile.Name(), ".png") && !strings.HasSuffix(imgFile.Name(), "signin.png") {
+			validFile = imgFile.Name()
+			break
+		}
+	}
+	if len(validFile) == 0 {
+		return errors.New("copyImage: no local image")
+	}
+	selectedFile := cachePath + validFile
+
+	// 使用 io.Copy 复制签到背景
+	srcFile, err := os.Open(selectedFile)
+	if err != nil {
+		return err
+	}
+	defer srcFile.Close()
+
+	dstFile, err := os.Create(picFile)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+	_, err = io.Copy(dstFile, srcFile)
+	if err != nil {
+		return err
+	}
+
+	return err
 }

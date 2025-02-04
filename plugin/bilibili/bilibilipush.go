@@ -5,13 +5,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"strconv"
 	"time"
-
-	"github.com/pkg/errors"
-	"github.com/tidwall/gjson"
-	zero "github.com/wdvxdr1123/ZeroBot"
-	"github.com/wdvxdr1123/ZeroBot/message"
 
 	bz "github.com/FloatTech/AnimeAPI/bilibili"
 	"github.com/FloatTech/floatbox/binary"
@@ -19,12 +15,16 @@ import (
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/img/text"
+	"github.com/pkg/errors"
+	"github.com/tidwall/gjson"
+	zero "github.com/wdvxdr1123/ZeroBot"
+	"github.com/wdvxdr1123/ZeroBot/message"
 )
 
 const (
 	ua      = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36"
-	referer = "https://www.bilibili.com/"
-	infoURL = "https://api.bilibili.com/x/space/acc/info?mid=%v"
+	referer = "https://space.bilibili.com/%v"
+	infoURL = "https://api.bilibili.com/x/space/wbi/acc/info?mid=%v"
 )
 
 // bdb bilibili推送数据库
@@ -45,8 +45,10 @@ func init() {
 			"- 取消b站动态订阅[uid|name]\n" +
 			"- 取消b站直播订阅[uid|name]\n" +
 			"- b站推送列表\n" +
-			"Tips: 需要配合job一起使用, 全局只需要设置一个, 无视响应状态推送, 下为例子\n" +
-			"记录在\"@every 5m\"触发的指令)\n" +
+			"- [开启|关闭]艾特全体\n" +
+			"Tips: 需要先在 bilibili 插件中设置cookie\n" +
+			"需要配合 job 插件一起使用, 全局只需要设置一个, 无视响应状态推送, 下为例子\n" +
+			"记录在\"@every 5m\"触发的指令\n" +
 			"拉取b站推送",
 		PrivateDataFolder: "bilibilipush",
 	})
@@ -55,11 +57,28 @@ func init() {
 	dbpath := en.DataFolder()
 	dbfile := dbpath + "push.db"
 	bdb = initializePush(dbfile)
+	en.OnFullMatch(`开启艾特全体`, zero.UserOrGrpAdmin, zero.OnlyGroup).SetBlock(true).Handle(func(ctx *zero.Ctx) {
+		gid := ctx.Event.GroupID
+		if err := changeAtAll(gid, 1); err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		ctx.SendChain(message.Text("已开启艾特全体Oo"))
+	})
+
+	en.OnFullMatch(`关闭艾特全体`, zero.UserOrGrpAdmin, zero.OnlyGroup).SetBlock(true).Handle(func(ctx *zero.Ctx) {
+		gid := ctx.Event.GroupID
+		if err := changeAtAll(gid, 0); err != nil {
+			ctx.SendChain(message.Text("ERROR: ", err))
+			return
+		}
+		ctx.SendChain(message.Text("已关闭艾特全体Oo"))
+	})
 
 	en.OnRegex(`^添加[B|b]站订阅\s?(.{1,25})$`, zero.UserOrGrpAdmin, getPara).SetBlock(true).Handle(func(ctx *zero.Ctx) {
 		buid, _ := strconv.ParseInt(ctx.State["uid"].(string), 10, 64)
-		name, err := getName(buid)
-		if err != nil {
+		name, err := getName(buid, cfg)
+		if err != nil || name == "" {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return
 		}
@@ -73,9 +92,10 @@ func init() {
 		}
 		ctx.SendChain(message.Text("已添加" + name + "的订阅"))
 	})
+
 	en.OnRegex(`^取消[B|b]站订阅\s?(.{1,25})$`, zero.UserOrGrpAdmin, getPara).SetBlock(true).Handle(func(ctx *zero.Ctx) {
 		buid, _ := strconv.ParseInt(ctx.State["uid"].(string), 10, 64)
-		name, err := getName(buid)
+		name, err := getName(buid, cfg)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return
@@ -92,7 +112,7 @@ func init() {
 	})
 	en.OnRegex(`^取消[B|b]站动态订阅\s?(.{1,25})$`, zero.UserOrGrpAdmin, getPara).SetBlock(true).Handle(func(ctx *zero.Ctx) {
 		buid, _ := strconv.ParseInt(ctx.State["uid"].(string), 10, 64)
-		name, err := getName(buid)
+		name, err := getName(buid, cfg)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return
@@ -113,7 +133,7 @@ func init() {
 		if gid == 0 {
 			gid = -ctx.Event.UserID
 		}
-		name, err := getName(buid)
+		name, err := getName(buid, cfg)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return
@@ -124,6 +144,7 @@ func init() {
 		}
 		ctx.SendChain(message.Text("已取消" + name + "的直播订阅"))
 	})
+
 	en.OnRegex(`^[B|b]站推送列表$`, zero.UserOrGrpAdmin).SetBlock(true).Handle(func(ctx *zero.Ctx) {
 		gid := ctx.Event.GroupID
 		if gid == 0 {
@@ -170,19 +191,37 @@ func init() {
 	})
 }
 
+func changeAtAll(gid int64, b int) (err error) {
+	bpMap := map[string]any{
+		"group_id": gid,
+		"at_all":   b,
+	}
+	return bdb.updateAtAll(bpMap)
+}
+
 // 取得uid的名字
-func getName(buid int64) (name string, err error) {
+func getName(buid int64, cookiecfg *bz.CookieConfig) (name string, err error) {
 	var ok bool
 	if name, ok = upMap[buid]; !ok {
-		var data []byte
-		data, err = web.RequestDataWith(web.NewDefaultClient(), fmt.Sprintf(infoURL, buid), "GET", referer, ua)
+		data, err := web.RequestDataWithHeaders(web.NewDefaultClient(), bz.SignURL(fmt.Sprintf(infoURL, buid)), "GET", func(r *http.Request) error {
+			if cookiecfg != nil {
+				cookie := ""
+				cookie, err = cookiecfg.Load()
+				if err != nil {
+					return err
+				}
+				r.Header.Add("Cookie", cookie)
+			}
+			r.Header.Set("User-Agent", ua)
+			return nil
+		}, nil)
 		if err != nil {
-			return
+			return "", err
 		}
 		status := int(gjson.Get(binary.BytesToString(data), "code").Int())
 		if status != 0 {
 			err = errors.New(gjson.Get(binary.BytesToString(data), "message").String())
-			return
+			return "", err
 		}
 		name = gjson.Get(binary.BytesToString(data), "data.name").String()
 		bdb.insertBilibiliUp(buid, name)
@@ -231,8 +270,19 @@ func unsubscribeLive(buid, groupid int64) (err error) {
 	return bdb.insertOrUpdateLiveAndDynamic(bpMap)
 }
 
-func getUserDynamicCard(buid int64) (cardList []gjson.Result, err error) {
-	data, err := web.RequestDataWith(web.NewDefaultClient(), fmt.Sprintf(bz.SpaceHistoryURL, buid, 0), "GET", referer, ua)
+func getUserDynamicCard(buid int64, cookiecfg *bz.CookieConfig) (cardList []gjson.Result, err error) {
+	data, err := web.RequestDataWithHeaders(web.NewDefaultClient(), fmt.Sprintf(bz.SpaceHistoryURL, buid, 0), "GET", func(req *http.Request) error {
+		if cookiecfg != nil {
+			cookie := ""
+			cookie, err = cookiecfg.Load()
+			if err != nil {
+				return err
+			}
+			req.Header.Add("Cookie", cookie)
+		}
+		req.Header.Add("User-Agent", ua)
+		return nil
+	}, nil)
 	if err != nil {
 		return
 	}
@@ -258,12 +308,12 @@ func sendDynamic(ctx *zero.Ctx) error {
 	uids := bdb.getAllBuidByDynamic()
 	for _, buid := range uids {
 		time.Sleep(2 * time.Second)
-		cardList, err := getUserDynamicCard(buid)
+		cardList, err := getUserDynamicCard(buid, cfg)
 		if err != nil {
 			return err
 		}
 		if len(cardList) == 0 {
-			return errors.Errorf("%v的历史动态数为0", buid)
+			return nil
 		}
 		t, ok := lastTime[buid]
 		// 第一次先记录时间,啥也不做
@@ -338,7 +388,7 @@ func sendLive(ctx *zero.Ctx) error {
 				if lCover == "" {
 					lCover = value.Get("keyframe").String()
 				}
-				var msg []message.MessageSegment
+				var msg []message.Segment
 				msg = append(msg, message.Text(lName+" 正在直播：\n"))
 				msg = append(msg, message.Text(lTitle))
 				msg = append(msg, message.Image(lCover))
@@ -348,6 +398,9 @@ func sendLive(ctx *zero.Ctx) error {
 						time.Sleep(time.Millisecond * 100)
 						switch {
 						case gid > 0:
+							if res := bdb.getAtAll(gid); res == 1 {
+								msg = append([]message.Segment{message.AtAll()}, msg...)
+							}
 							ctx.SendGroupMessage(gid, msg)
 						case gid < 0:
 							ctx.SendPrivateMessage(-gid, msg)

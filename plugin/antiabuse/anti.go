@@ -38,7 +38,7 @@ func onDel(uid int64, _ struct{}) {
 }
 
 func init() {
-	engine := control.Register("antiabuse", &ctrl.Options[*zero.Ctx]{
+	engine := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault:  false,
 		Brief:             "违禁词检测",
 		Help:              "- /[添加|删除|查看]违禁词",
@@ -70,7 +70,7 @@ func init() {
 			if err := ctx.State["manager"].(*ctrl.Control[*zero.Ctx]).Manager.DoBlock(uid); err == nil {
 				t := time.Now().Unix()
 				cache.Set(uid, struct{}{})
-				ctx.SetGroupBan(gid, uid, int64(bandur.Minutes()))
+				ctx.SetThisGroupBan(uid, int64(bandur.Minutes()))
 				ctx.SendChain(message.Text("检测到违禁词, 已封禁/屏蔽", bandur))
 				db.Lock()
 				defer db.Unlock()

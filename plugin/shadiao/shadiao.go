@@ -27,7 +27,7 @@ const (
 )
 
 var (
-	engine = control.Register("shadiao", &ctrl.Options[*zero.Ctx]{
+	engine = control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "沙雕app", // 也许可以更好
 		Help:             "- 哄我\n- 渣我\n- 来碗绿茶\n- 发个朋友圈\n- 来碗毒鸡汤\n- 讲个段子\n- 马丁路德骂我\n",
@@ -38,7 +38,7 @@ var (
 func init() {
 	engine.OnFullMatchGroup([]string{"哄我", "来碗毒鸡汤", "发个朋友圈"}).SetBlock(true).Limit(ctxext.LimitByUser).Handle(func(ctx *zero.Ctx) {
 		requestURL := sdMap[ctx.State["matched"].(string)]
-		data, err := web.RequestDataWith(web.NewDefaultClient(), requestURL, "GET", sdReferer, ua)
+		data, err := web.RequestDataWith(web.NewDefaultClient(), requestURL, "GET", sdReferer, ua, nil)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return

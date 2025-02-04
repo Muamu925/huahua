@@ -13,7 +13,7 @@ import (
 )
 
 func init() {
-	en := control.Register("wtf", &ctrl.Options[*zero.Ctx]{
+	en := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "鬼东西",
 		Help:             "- 鬼东西列表\n- 查询鬼东西[序号][@xxx]",
@@ -44,7 +44,7 @@ func init() {
 			var secondname string
 			if len(ctx.Event.Message) > 1 && ctx.Event.Message[1].Type == "at" {
 				qq, _ := strconv.ParseInt(ctx.Event.Message[1].Data["qq"], 10, 64)
-				secondname = ctx.GetGroupMemberInfo(ctx.Event.GroupID, qq, false).Get("nickname").Str
+				secondname = ctx.GetThisGroupMemberInfo(qq, false).Get("nickname").Str
 			}
 			name = ctx.Event.Sender.NickName
 			var text string

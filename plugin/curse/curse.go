@@ -10,6 +10,7 @@ import (
 
 	fcext "github.com/FloatTech/floatbox/ctxext"
 	"github.com/FloatTech/floatbox/process"
+	sql "github.com/FloatTech/sqlite"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
@@ -21,7 +22,7 @@ const (
 )
 
 func init() {
-	engine := control.Register("curse", &ctrl.Options[*zero.Ctx]{
+	engine := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: true,
 		Brief:            "骂人反击",
 		Help:             "- 骂我\n- 大力骂我",
@@ -29,13 +30,13 @@ func init() {
 	})
 
 	getdb := fcext.DoOnceOnSuccess(func(ctx *zero.Ctx) bool {
-		db.DBPath = engine.DataFolder() + "curse.db"
+		db = sql.New(engine.DataFolder() + "curse.db")
 		_, err := engine.GetLazyData("curse.db", true)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return false
 		}
-		err = db.Open(time.Hour * 24)
+		err = db.Open(time.Hour)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return false

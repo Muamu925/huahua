@@ -16,15 +16,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Coloured-glaze/gg"
 	bz "github.com/FloatTech/AnimeAPI/bilibili"
 	fcext "github.com/FloatTech/floatbox/ctxext"
 	"github.com/FloatTech/floatbox/file"
-	"github.com/FloatTech/floatbox/img/writer"
 	"github.com/FloatTech/floatbox/web"
+	"github.com/FloatTech/gg"
+	"github.com/FloatTech/imgfactory"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
-	"github.com/FloatTech/zbputils/img"
 	"github.com/FloatTech/zbputils/img/text"
 	log "github.com/sirupsen/logrus"
 	zero "github.com/wdvxdr1123/ZeroBot"
@@ -49,7 +48,7 @@ var (
 
 // 查成分的
 func init() {
-	engine := control.Register("bilibili", &ctrl.Options[*zero.Ctx]{
+	engine := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "b站查成分查弹幕",
 		Help: "- >vup info [xxx]\n" +
@@ -57,7 +56,7 @@ func init() {
 			"- 查成分 [xxx]\n" +
 			"- 查弹幕 [xxx]\n" +
 			"- 设置b站cookie b_ut=7;buvid3=0;i-wanna-go-back=-1;innersign=0;\n" +
-			"- 更新vup" +
+			"- 更新vup\n" +
 			"Tips: (412就是拦截的意思,建议私聊把cookie设全)\n",
 		PublicDataFolder: "Bilibili",
 	})
@@ -174,7 +173,7 @@ func init() {
 					ctx.SendChain(message.Text("ERROR: ", err))
 					return
 				}
-				back = img.Size(back, backX, backY).Im
+				back = imgfactory.Size(back, backX, backY).Image()
 			}
 			if len(vups) > 50 {
 				ctx.SendChain(message.Text(u.Name + "关注的up主太多了, 只展示前50个up"))
@@ -188,11 +187,11 @@ func init() {
 				canvas.DrawImage(back, 0, 0)
 			}
 			canvas.SetColor(color.Black)
-			_, err = file.GetLazyData(text.BoldFontFile, control.Md5File, true)
+			data, err := file.GetLazyData(text.BoldFontFile, control.Md5File, true)
 			if err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
 			}
-			if err = canvas.LoadFontFace(text.BoldFontFile, fontSize); err != nil {
+			if err = canvas.ParseFontFace(data, fontSize); err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return
 			}
@@ -259,12 +258,15 @@ func init() {
 			f, err := os.Create(drawedFile)
 			if err != nil {
 				log.Errorln("[bilibili]", err)
-				data, cl := writer.ToBytes(canvas.Image())
+				data, err := imgfactory.ToBytes(canvas.Image())
+				if err != nil {
+					log.Errorln("[bilibili]", err)
+					return
+				}
 				ctx.SendChain(message.ImageBytes(data))
-				cl()
 				return
 			}
-			_, err = writer.WriteTo(canvas.Image(), f)
+			_, err = imgfactory.WriteTo(canvas.Image(), f)
 			_ = f.Close()
 			if err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
@@ -291,7 +293,7 @@ func init() {
 		}
 
 		client := &http.Client{Transport: tr}
-		data, err := web.RequestDataWith(client, fmt.Sprintf(bz.DanmakuAPI, id, pagenum), "GET", "", web.RandUA())
+		data, err := web.RequestDataWith(client, fmt.Sprintf(bz.DanmakuAPI, id, pagenum), "GET", "", web.RandUA(), nil)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return
@@ -318,15 +320,15 @@ func init() {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return
 			}
-			back = img.Size(back, backX, backY).Im
+			back = imgfactory.Size(back, backX, backY).Image()
 		}
 		canvas := gg.NewContext(100, 100)
 		fontSize := 50.0
-		_, err = file.GetLazyData(text.BoldFontFile, control.Md5File, true)
+		data, err = file.GetLazyData(text.BoldFontFile, control.Md5File, true)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 		}
-		if err = canvas.LoadFontFace(text.BoldFontFile, fontSize); err != nil {
+		if err = canvas.ParseFontFace(data, fontSize); err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return
 		}
@@ -335,17 +337,17 @@ func init() {
 		faceH := float64(510)
 
 		totalDanmuku := 0
-		for i := 0; i < len(danmaku.Data.Data); i++ {
-			totalDanmuku += len(danmaku.Data.Data[i].Danmakus) + 1
+		for i := 0; i < len(danmaku.Data.Data.Records); i++ {
+			totalDanmuku += len(danmaku.Data.Data.Records[i].Danmakus) + 1
 		}
-		cw := 10000
+		cw := 3000
 		mcw := float64(2000)
-		ch := 550 + len(danmaku.Data.Data)*int(faceH) + totalDanmuku*int(danmuH)
+		ch := 550 + len(danmaku.Data.Data.Records)*int(faceH) + totalDanmuku*int(danmuH)
 		canvas = gg.NewContext(cw, ch)
 		canvas.SetColor(color.White)
 		canvas.Clear()
 		canvas.SetColor(color.Black)
-		if err = canvas.LoadFontFace(text.BoldFontFile, fontSize); err != nil {
+		if err = canvas.ParseFontFace(data, fontSize); err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return
 		}
@@ -370,9 +372,9 @@ func init() {
 		canvas.DrawString("网页链接: "+fmt.Sprintf(bz.DanmakuURL, u.Mid), startWidth, 422.5)
 		var channelStart float64
 		channelStart = float64(550)
-		for i := 0; i < len(danmaku.Data.Data); i++ {
-			item := danmaku.Data.Data[i]
-			facePath = cachePath + strconv.Itoa(int(item.Channel.UID)) + "vupFace" + path.Ext(item.Channel.FaceURL)
+		for i := 0; i < len(danmaku.Data.Data.Records); i++ {
+			item := danmaku.Data.Data.Records[i]
+			facePath = cachePath + strconv.Itoa(item.Channel.UID) + "vupFace" + path.Ext(item.Channel.FaceURL)
 			if path.Ext(item.Channel.FaceURL) != ".webp" {
 				err = initFacePic(facePath, item.Channel.FaceURL)
 				if err != nil {
@@ -384,14 +386,14 @@ func init() {
 					ctx.SendChain(message.Text("ERROR: ", err))
 					return
 				}
-				back = img.Size(back, backX, backY).Im
+				back = imgfactory.Size(back, backX, backY).Image()
 			}
 			if back != nil {
 				canvas.DrawImage(back, facestart, int(channelStart))
 			}
 			canvas.SetRGB255(24, 144, 255)
 			canvas.DrawString("标题: "+item.Live.Title, startWidth, channelStart+fontH)
-			canvas.DrawString("主播: "+item.Channel.Name, startWidth, channelStart+fontH*2)
+			canvas.DrawString("主播: "+item.Channel.UName, startWidth, channelStart+fontH*2)
 			canvas.SetColor(color.Black)
 			canvas.DrawString("开始时间: "+time.UnixMilli(item.Live.StartDate).Format("2006-01-02 15:04:05"), startWidth, channelStart+fontH*3)
 			if item.Live.IsFinish {
@@ -409,8 +411,8 @@ func init() {
 
 				canvas.DrawString("直播时长: "+strconv.FormatFloat(float64(time.Now().UnixMilli()-item.Live.StartDate)/3600000.0, 'f', 1, 64)+"小时", startWidth, channelStart+fontH*5)
 			}
-			canvas.DrawString("弹幕数量: "+strconv.Itoa(int(item.Live.DanmakusCount)), startWidth, channelStart+fontH*6)
-			canvas.DrawString("观看次数: "+strconv.Itoa(int(item.Live.WatchCount)), startWidth, channelStart+fontH*7)
+			canvas.DrawString("弹幕数量: "+strconv.Itoa(item.Live.DanmakusCount), startWidth, channelStart+fontH*6)
+			canvas.DrawString("观看次数: "+strconv.Itoa(item.Live.WatchCount), startWidth, channelStart+fontH*7)
 
 			t := "收益:"
 			l, _ := canvas.MeasureString(t)
@@ -432,7 +434,7 @@ func init() {
 				canvas.DrawString(t, moveW, danmuNow)
 				moveW += l + dz
 
-				t = danItem.Name
+				t = danItem.UName
 				l, _ = canvas.MeasureString(t)
 				canvas.SetRGB255(24, 144, 255)
 				canvas.DrawString(t, moveW, danmuNow)
@@ -520,12 +522,15 @@ func init() {
 		f, err := os.Create(drawedFile)
 		if err != nil {
 			log.Errorln("[bilibili]", err)
-			data, cl := writer.ToBytes(nim)
+			data, err := imgfactory.ToBytes(nim)
+			if err != nil {
+				log.Errorln("[bilibili]", err)
+				return
+			}
 			ctx.SendChain(message.ImageBytes(data))
-			cl()
 			return
 		}
-		_, err = writer.WriteTo(nim, f)
+		_, err = imgfactory.WriteTo(nim, f)
 		_ = f.Close()
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))

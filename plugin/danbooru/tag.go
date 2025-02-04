@@ -3,16 +3,17 @@ package deepdanbooru
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"image"
 	"net/url"
 	"sort"
 
-	"github.com/Coloured-glaze/gg"
 	"github.com/FloatTech/floatbox/file"
 	"github.com/FloatTech/floatbox/web"
+	"github.com/FloatTech/gg"
+	"github.com/FloatTech/imgfactory"
 	"github.com/FloatTech/zbputils/control"
-	imgutils "github.com/FloatTech/zbputils/img"
 	"github.com/FloatTech/zbputils/img/text" // jpg png gif
 	_ "golang.org/x/image/webp"              // webp
 )
@@ -59,8 +60,12 @@ func tagurl(name, u string) (im image.Image, st *sorttags, err error) {
 	if err != nil {
 		return
 	}
+	if len(data) < 4 {
+		err = errors.New("data too short")
+		return
+	}
 	tags := make(map[string]float64)
-	err = json.Unmarshal(data, &tags)
+	err = json.Unmarshal(data[1:len(data)-1], &tags)
 	if err != nil {
 		return
 	}
@@ -76,11 +81,11 @@ func tagurl(name, u string) (im image.Image, st *sorttags, err error) {
 	st = newsorttags(tags)
 	sort.Sort(st)
 
-	_, err = file.GetLazyData(text.BoldFontFile, control.Md5File, true)
+	boldfd, err := file.GetLazyData(text.BoldFontFile, control.Md5File, true)
 	if err != nil {
 		return
 	}
-	_, err = file.GetLazyData(text.ConsolasFontFile, control.Md5File, true)
+	consfd, err := file.GetLazyData(text.ConsolasFontFile, control.Md5File, true)
 	if err != nil {
 		return
 	}
@@ -94,19 +99,19 @@ func tagurl(name, u string) (im image.Image, st *sorttags, err error) {
 		return
 	}
 
-	img = imgutils.Limit(img, 1280, 720)
+	img = imgfactory.Limit(img, 1280, 720)
 
 	canvas := gg.NewContext(img.Bounds().Size().X, img.Bounds().Size().Y+int(float64(img.Bounds().Size().X)*0.2)+len(tags)*img.Bounds().Size().X/25)
 	canvas.SetRGB(1, 1, 1)
 	canvas.Clear()
 	canvas.DrawImage(img, 0, 0)
-	if err = canvas.LoadFontFace(text.BoldFontFile, float64(img.Bounds().Size().X)*0.1); err != nil {
+	if err = canvas.ParseFontFace(boldfd, float64(img.Bounds().Size().X)*0.1); err != nil {
 		return
 	}
 	canvas.SetRGB(0, 0, 0)
 	canvas.DrawString(name, float64(img.Bounds().Size().X)*0.02, float64(img.Bounds().Size().Y)+float64(img.Bounds().Size().X)*0.1)
 	i := float64(img.Bounds().Size().Y) + float64(img.Bounds().Size().X)*0.2
-	if err = canvas.LoadFontFace(text.ConsolasFontFile, float64(img.Bounds().Size().X)*0.04); err != nil {
+	if err = canvas.ParseFontFace(consfd, float64(img.Bounds().Size().X)*0.04); err != nil {
 		return
 	}
 	rate := float64(img.Bounds().Size().X) * 0.04

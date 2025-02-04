@@ -4,6 +4,8 @@ env:
 before:
   hooks:
     - go mod tidy
+    - go install github.com/tc-hib/go-winres@latest
+    - go-winres make
 builds:
   - id: nowin
     env:
@@ -31,7 +33,6 @@ builds:
     goos:
       - windows
     goarch:
-      - 386
       - amd64
     mod_timestamp: "{{ .CommitTimestamp }}"
     flags:
@@ -64,7 +65,7 @@ archives:
         format: zip
 
 nfpms:
-  - license: GPL 3.0
+  - license: AGPL 3.0
     homepage: https://github.com/FloatTech/ZeroBot-Plugin
     file_name_template: "zbp_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
     formats:

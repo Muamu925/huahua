@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"strconv"
 
+	"github.com/fumiama/terasu/http2"
 	"github.com/sirupsen/logrus"
 	zero "github.com/wdvxdr1123/ZeroBot"
 	"github.com/wdvxdr1123/ZeroBot/message"
@@ -21,7 +22,11 @@ import (
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
-	"github.com/FloatTech/zbputils/img/pool"
+)
+
+const (
+	enableHex = 0x10
+	unableHex = 0x7fffffff_fffffffd
 )
 
 var (
@@ -29,7 +34,7 @@ var (
 )
 
 func init() { // 插件主体
-	engine := control.Register("saucenao", &ctrl.Options[*zero.Ctx]{
+	engine := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "以图搜图",
 		Help: "- 以图搜图 | 搜索图片 | 以图识图[图片]\n" +
@@ -67,22 +72,12 @@ func init() { // 插件主体
 				for i := range illust.ImageUrls {
 					f := file.BOTPATH + "/" + illust.Path(i)
 					n := name + "_p" + strconv.Itoa(i)
-					var m *pool.Image
 					if file.IsNotExist(f) {
-						m, err = pool.GetImage(n)
-						if err == nil {
-							imgs = append(imgs, message.Image(m.String()))
-							continue
-						}
-						logrus.Debugln("[sausenao]开始下载", n)
-						logrus.Debugln("[sausenao]urls:", illust.ImageUrls)
+						logrus.Debugln("[saucenao]开始下载", n)
+						logrus.Debugln("[saucenao]urls:", illust.ImageUrls)
 						err1 := illust.DownloadToCache(i)
-						if err1 == nil {
-							m.SetFile(f)
-							_, _ = m.Push(ctxext.SendToSelf(ctx), ctxext.GetMessage(ctx))
-						}
 						if err1 != nil {
-							logrus.Debugln("[sausenao]下载err:", err1)
+							logrus.Debugln("[saucenao]下载err:", err1)
 						}
 					}
 					imgs = append(imgs, message.Image("file:///"+f))
@@ -91,7 +86,7 @@ func init() { // 插件主体
 					"标题: ", illust.Title, "\n",
 					"插画ID: ", illust.Pid, "\n",
 					"画师: ", illust.UserName, "\n",
-					"画师ID: ", illust.UserId, "\n",
+					"画师ID: ", illust.UserID, "\n",
 					"直链: ", "https://pixivel.moe/detail?id=", illust.Pid,
 				)
 				if imgs != nil {
@@ -109,8 +104,18 @@ func init() { // 插件主体
 	engine.OnKeywordGroup([]string{"以图搜图", "搜索图片", "以图识图"}, zero.MustProvidePicture).SetBlock(true).
 		Handle(func(ctx *zero.Ctx) {
 			// 开始搜索图片
+			pics, ok := ctx.State["image_url"].([]string)
+			showPic := false
+			if !ok {
+				ctx.SendChain(message.Text("ERROR: 未获取到图片链接"))
+				return
+			}
+			c, ok := ctx.State["manager"].(*ctrl.Control[*zero.Ctx])
+			if ok && c.GetData(ctx.Event.GroupID)&enableHex == enableHex {
+				showPic = true
+			}
 			ctx.SendChain(message.Text("少女祈祷中..."))
-			for _, pic := range ctx.State["image_url"].([]string) {
+			for _, pic := range pics {
 				if saucenaocli != nil {
 					resp, err := saucenaocli.FromURL(pic)
 					if err == nil && resp.Count() > 0 {
@@ -129,22 +134,24 @@ func init() { // 插件主体
 									}
 								}
 							})
-							resp, err := http.Head(result.Header.Thumbnail)
+							resp, err := http2.Head(result.Header.Thumbnail)
 							msg := make(message.Message, 0, 3)
 							if s > 80.0 {
 								msg = append(msg, message.Text("我有把握是这个!"))
 							} else {
 								msg = append(msg, message.Text("也许是这个?"))
 							}
-							if err == nil {
-								_ = resp.Body.Close()
-								if resp.StatusCode == http.StatusOK {
-									msg = append(msg, message.Image(result.Header.Thumbnail))
+							if showPic {
+								if err == nil {
+									_ = resp.Body.Close()
+									if resp.StatusCode == http.StatusOK {
+										msg = append(msg, message.Image(result.Header.Thumbnail))
+									} else {
+										msg = append(msg, message.Image(pic))
+									}
 								} else {
 									msg = append(msg, message.Image(pic))
 								}
-							} else {
-								msg = append(msg, message.Image(pic))
 							}
 							msg = append(msg, message.Text("\n图源: ", result.Header.IndexName, binary.BytesToString(b)))
 							ctx.Send(message.Message{ctxext.FakeSenderForwardNode(ctx, msg...)})
@@ -157,27 +164,29 @@ func init() { // 插件主体
 					ctx.SendChain(message.Text("请私聊发送 设置 saucenao api key [apikey] 以启用 saucenao 搜图 (方括号不需要输入), key 请前往 https://saucenao.com/user.php?page=search-api 获取"))
 				}
 				// ascii2d 搜索
-				if result, err := ascii2d.Ascii2d(pic); err != nil {
+				result, err := ascii2d.ASCII2d(pic)
+				if err != nil {
 					ctx.SendChain(message.Text("ERROR: ", err))
 					continue
-				} else {
-					msg := message.Message{ctxext.FakeSenderForwardNode(ctx, message.Text("ascii2d搜图结果"))}
-					for i := 0; i < len(result) && i < 5; i++ {
-						msg = append(msg, ctxext.FakeSenderForwardNode(ctx,
-							message.Image(result[i].Thumb),
-							message.Text(fmt.Sprintf(
-								"标题: %s\n图源: %s\n画师: %s\n画师链接: %s\n图片链接: %s",
-								result[i].Name,
-								result[i].Type,
-								result[i].AuthNm,
-								result[i].Author,
-								result[i].Link,
-							))),
-						)
+				}
+				msg := message.Message{ctxext.FakeSenderForwardNode(ctx, message.Text("ascii2d搜图结果"))}
+				for i := 0; i < len(result) && i < 5; i++ {
+					var resultMsgs message.Message
+					if showPic {
+						resultMsgs = append(resultMsgs, message.Image(result[i].Thumb))
 					}
-					if id := ctx.Send(msg).ID(); id == 0 {
-						ctx.SendChain(message.Text("ERROR: 可能被风控了"))
-					}
+					resultMsgs = append(resultMsgs, message.Text(fmt.Sprintf(
+						"标题: %s\n图源: %s\n画师: %s\n画师链接: %s\n图片链接: %s",
+						result[i].Name,
+						result[i].Type,
+						result[i].AuthNm,
+						result[i].Author,
+						result[i].Link,
+					)))
+					msg = append(msg, ctxext.FakeSenderForwardNode(ctx, resultMsgs...))
+				}
+				if id := ctx.Send(msg).ID(); id == 0 {
+					ctx.SendChain(message.Text("ERROR: 可能被风控了"))
 				}
 			}
 		})
@@ -198,5 +207,34 @@ func init() { // 插件主体
 				return
 			}
 			ctx.SendChain(message.Text("成功!"))
+		})
+	engine.OnRegex(`^(开启|打开|启用|关闭|关掉|禁用)搜图显示图片$`, zero.AdminPermission).SetBlock(true).
+		Handle(func(ctx *zero.Ctx) {
+			gid := ctx.Event.GroupID
+			if gid <= 0 {
+				// 个人用户设为负数
+				gid = -ctx.Event.UserID
+			}
+			option := ctx.State["regex_matched"].([]string)[1]
+			c, ok := ctx.State["manager"].(*ctrl.Control[*zero.Ctx])
+			if !ok {
+				ctx.SendChain(message.Text("找不到服务!"))
+				return
+			}
+			data := c.GetData(ctx.Event.GroupID)
+			switch option {
+			case "开启", "打开", "启用":
+				data |= enableHex
+			case "关闭", "关掉", "禁用":
+				data &= unableHex
+			default:
+				return
+			}
+			err := c.SetData(gid, data)
+			if err != nil {
+				ctx.SendChain(message.Text("出错啦: ", err))
+				return
+			}
+			ctx.SendChain(message.Text("已", option, "搜图显示图片"))
 		})
 }

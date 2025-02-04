@@ -5,11 +5,11 @@ import (
 	"math/rand"
 	"sort"
 	"strconv"
-	"strings"
 	"sync"
 	"time"
 
 	"github.com/FloatTech/floatbox/math"
+	"github.com/FloatTech/imgfactory"
 	ctrl "github.com/FloatTech/zbpctrl"
 	control "github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
@@ -21,17 +21,15 @@ import (
 	// 数据库
 	sql "github.com/FloatTech/sqlite"
 	// 画图
-	"github.com/Coloured-glaze/gg"
 	fcext "github.com/FloatTech/floatbox/ctxext"
 	"github.com/FloatTech/floatbox/file"
-	"github.com/FloatTech/floatbox/img/writer"
+	"github.com/FloatTech/gg"
 	"github.com/FloatTech/zbputils/img/text"
-	// 货币系统
 )
 
 type 婚姻登记 struct {
-	db *sql.Sqlite
 	sync.RWMutex
+	db sql.Sqlite
 }
 
 // 群设置
@@ -54,13 +52,11 @@ type userinfo struct {
 }
 
 var (
-	民政局 = &婚姻登记{
-		db: &sql.Sqlite{},
-	}
-	engine = control.Register("qqwife", &ctrl.Options[*zero.Ctx]{
+	民政局    婚姻登记
+	engine = control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "一群一天一夫一妻制群老婆",
-		Help: "- 娶群友\n- 群老婆列表\n- [允许|禁止]自由恋爱\n- [允许|禁止]牛头人\n- 设置CD为xx小时    →(默认12小时)\n- 重置花名册\n- 重置所有花名册(用于清除所有群数据及其设置)\n- 查好感度[对方Q号|@对方QQ]\n- 好感度列表\n" +
+		Help: "- 娶群友\n- 群老婆列表\n- [允许|禁止]自由恋爱\n- [允许|禁止]牛头人\n- 设置CD为xx小时    →(默认12小时)\n- 重置花名册\n- 重置所有花名册(用于清除所有群数据及其设置)\n- 查好感度[对方Q号|@对方QQ]\n- 好感度列表\n- 好感度数据整理 (当好感度列表出现重复名字时使用)\n" +
 			"--------------------------------\n以下指令存在CD,不跨天刷新,前两个受指令开关\n--------------------------------\n" +
 			"- (娶|嫁)@对方QQ\n自由选择对象, 自由恋爱(好感度越高成功率越高,保底30%概率)\n" +
 			"- 当[对方Q号|@对方QQ]的小三\n我和你才是真爱, 为了你我愿意付出一切(好感度越高成功率越高,保底10%概率)\n" +
@@ -68,8 +64,8 @@ var (
 			"- 买礼物给[对方Q号|@对方QQ]\n使用小熊饼干获取好感度\n" +
 			"- 做媒 @攻方QQ @受方QQ\n身为管理, 群友的xing福是要搭把手的(攻受双方好感度越高成功率越高,保底30%概率)\n" +
 			"--------------------------------\n好感度规则\n--------------------------------\n" +
-			"\"娶群友\"指令好感度随机增加1~5。\n\"A牛B的C\"会导致C恨A, 好感度-5;\nB为了报复A, 好感度+5(什么柜子play)\nA为BC做媒,成功B、C对A好感度+1反之-1\n做媒成功BC好感度+1" +
-			"Tips: 群老婆列表过0点刷新",
+			"\"娶群友\"&\"(娶|嫁)@对方QQ\"指令好感度随机增加1~5。\n\"A牛B的C\"会导致C恨A, 好感度-5;\nB为了报复A, 好感度+5(什么柜子play)\nA为BC做媒,成功B、C对A好感度+1反之-1\n做媒成功BC好感度+1" +
+			"\nTips: 群老婆列表过0点刷新",
 		PrivateDataFolder: "qqwife",
 	}).ApplySingle(single.New(
 		single.WithKeyFn(func(ctx *zero.Ctx) int64 { return ctx.Event.GroupID }),
@@ -82,8 +78,8 @@ var (
 		}),
 	))
 	getdb = fcext.DoOnceOnSuccess(func(ctx *zero.Ctx) bool {
-		民政局.db.DBPath = engine.DataFolder() + "结婚登记表.db"
-		err := 民政局.db.Open(time.Hour * 24)
+		民政局.db = sql.New(engine.DataFolder() + "结婚登记表.db")
+		err := 民政局.db.Open(time.Hour)
 		if err == nil {
 			// 创建群配置表
 			err = 民政局.db.Create("updateinfo", &updateinfo{})
@@ -129,7 +125,7 @@ func init() {
 				ctx.SendChain(
 					message.At(uid),
 					message.Text("\n今天你在", userInfo.Updatetime, "娶了群友"),
-					message.Image("http://q4.qlogo.cn/g?b=qq&nk="+strconv.FormatInt(userInfo.Target, 10)+"&s=640").Add("cache", 0),
+					message.Image("https://q4.qlogo.cn/g?b=qq&nk="+strconv.FormatInt(userInfo.Target, 10)+"&s=640").Add("cache", 0),
 					message.Text(
 						"\n",
 						"[", userInfo.Targetname, "]",
@@ -141,7 +137,7 @@ func init() {
 				ctx.SendChain(
 					message.At(uid),
 					message.Text("\n今天你在", userInfo.Updatetime, "被群友"),
-					message.Image("http://q4.qlogo.cn/g?b=qq&nk="+strconv.FormatInt(userInfo.User, 10)+"&s=640").Add("cache", 0),
+					message.Image("https://q4.qlogo.cn/g?b=qq&nk="+strconv.FormatInt(userInfo.User, 10)+"&s=640").Add("cache", 0),
 					message.Text(
 						"\n",
 						"[", userInfo.Username, "]",
@@ -201,7 +197,7 @@ func init() {
 			ctx.SendChain(
 				message.At(uid),
 				message.Text("今天你的群老婆是"),
-				message.Image("http://q4.qlogo.cn/g?b=qq&nk="+strconv.FormatInt(fiancee, 10)+"&s=640").Add("cache", 0),
+				message.Image("https://q4.qlogo.cn/g?b=qq&nk="+strconv.FormatInt(fiancee, 10)+"&s=640").Add("cache", 0),
 				message.Text(
 					"\n",
 					"[", ctx.CardOrNickName(fiancee), "]",
@@ -236,14 +232,14 @@ func init() {
 			canvas.SetRGB(1, 1, 1) // 白色
 			canvas.Clear()
 			/***********下载字体，可以注销掉***********/
-			_, err = file.GetLazyData(text.BoldFontFile, control.Md5File, true)
+			data, err := file.GetLazyData(text.BoldFontFile, control.Md5File, true)
 			if err != nil {
 				ctx.SendChain(message.Text("[qqwife]ERROR: ", err))
 			}
 			/***********设置字体颜色为黑色***********/
 			canvas.SetRGB(0, 0, 0)
 			/***********设置字体大小,并获取字体高度用来定位***********/
-			if err = canvas.LoadFontFace(text.BoldFontFile, fontSize*2); err != nil {
+			if err = canvas.ParseFontFace(data, fontSize*2); err != nil {
 				ctx.SendChain(message.Text("[qqwife]ERROR: ", err))
 				return
 			}
@@ -252,7 +248,7 @@ func init() {
 			canvas.DrawString("群老婆列表", (1500-sl)/2, 160-h) // 放置在中间位置
 			canvas.DrawString("————————————————————", 0, 250-h)
 			/***********设置字体大小,并获取字体高度用来定位***********/
-			if err = canvas.LoadFontFace(text.BoldFontFile, fontSize); err != nil {
+			if err = canvas.ParseFontFace(data, fontSize); err != nil {
 				ctx.SendChain(message.Text("[qqwife]ERROR: ", err))
 				return
 			}
@@ -264,9 +260,12 @@ func init() {
 				canvas.DrawString(slicename(info[2], canvas), 800, float64(260+50*i)-h)
 				canvas.DrawString("("+info[3]+")", 1150, float64(260+50*i)-h)
 			}
-			data, cl := writer.ToBytes(canvas.Image())
+			data, err = imgfactory.ToBytes(canvas.Image())
+			if err != nil {
+				ctx.SendChain(message.Text("[qqwife]ERROR: ", err))
+				return
+			}
 			ctx.SendChain(message.ImageBytes(data))
-			cl()
 		})
 	engine.OnRegex(`^重置(所有|本群|/d+)?花名册$`, zero.SuperUserPermission, getdb).SetBlock(true).Limit(ctxext.LimitByUser).
 		Handle(func(ctx *zero.Ctx) {
@@ -279,7 +278,7 @@ func init() {
 					ctx.SendChain(message.Text("该功能只能在群组使用或者指定群组"))
 					return
 				}
-				err = 民政局.清理花名册("group" + strconv.FormatInt(ctx.Event.GroupID, 10))
+				err = 民政局.清理花名册(ctx.Event.GroupID)
 			default:
 				cmd := ctx.State["regex_matched"].([]string)[1]
 				gid, _ := strconv.ParseInt(cmd, 10, 64) // 判断是否为群号
@@ -287,7 +286,7 @@ func init() {
 					ctx.SendChain(message.Text("请输入正确的群号"))
 					return
 				}
-				err = 民政局.清理花名册("group" + cmd)
+				err = 民政局.清理花名册(gid)
 			}
 			if err != nil {
 				ctx.SendChain(message.Text("[ERROR]:", err))
@@ -300,12 +299,12 @@ func init() {
 func (sql *婚姻登记) 查看设置(gid int64) (dbinfo updateinfo, err error) {
 	sql.Lock()
 	defer sql.Unlock()
-	// 创建群表哥
+	// 创建群表格
 	err = sql.db.Create("updateinfo", &updateinfo{})
 	if err != nil {
 		return
 	}
-	if !sql.db.CanFind("updateinfo", "where gid is "+strconv.FormatInt(gid, 10)) {
+	if !sql.db.CanFind("updateinfo", "WHERE gid = ?", gid) {
 		// 没有记录
 		return updateinfo{
 			GID:      gid,
@@ -314,7 +313,7 @@ func (sql *婚姻登记) 查看设置(gid int64) (dbinfo updateinfo, err error) 
 			CDtime:   12,
 		}, nil
 	}
-	_ = sql.db.Find("updateinfo", &dbinfo, "where gid is "+strconv.FormatInt(gid, 10))
+	_ = sql.db.Find("updateinfo", &dbinfo, "WHERE gid = ?", gid)
 	return
 }
 
@@ -332,7 +331,7 @@ func (sql *婚姻登记) 开门时间(gid int64) error {
 	sql.Lock()
 	defer sql.Unlock()
 	dbinfo := updateinfo{}
-	_ = sql.db.Find("updateinfo", &dbinfo, "where gid is "+strconv.FormatInt(gid, 10))
+	_ = sql.db.Find("updateinfo", &dbinfo, "WHERE gid = ?", gid)
 	if time.Now().Format("2006/01/02") != dbinfo.Updatetime {
 		// 如果跨天了就删除
 		_ = sql.db.Drop("group" + strconv.FormatInt(gid, 10))
@@ -348,15 +347,14 @@ func (sql *婚姻登记) 查户口(gid, uid int64) (info userinfo, err error) {
 	sql.Lock()
 	defer sql.Unlock()
 	gidstr := "group" + strconv.FormatInt(gid, 10)
-	// 创建群表哥
+	// 创建群表格
 	err = sql.db.Create(gidstr, &userinfo{})
 	if err != nil {
 		return
 	}
-	uidstr := strconv.FormatInt(uid, 10)
-	err = sql.db.Find(gidstr, &info, "where user = "+uidstr)
+	err = sql.db.Find(gidstr, &info, "WHERE user = ?", uid)
 	if err != nil {
-		err = sql.db.Find(gidstr, &info, "where target = "+uidstr)
+		err = sql.db.Find(gidstr, &info, "WHERE target = ?", uid)
 	}
 	return
 }
@@ -421,7 +419,7 @@ func slicename(name string, canvas *gg.Context) (resultname string) {
 	return
 }
 
-func (sql *婚姻登记) 清理花名册(gid ...string) error {
+func (sql *婚姻登记) 清理花名册(gid ...int64) error {
 	sql.Lock()
 	defer sql.Unlock()
 	switch gid {
@@ -437,9 +435,9 @@ func (sql *婚姻登记) 清理花名册(gid ...string) error {
 		}
 		return err
 	default:
-		err := sql.db.Drop(gid[0])
+		err := sql.db.Drop("group" + strconv.FormatInt(gid[0], 10))
 		if err == nil {
-			_ = sql.db.Del("cdsheet", "where GroupID is "+strings.ReplaceAll(gid[0], "group", ""))
+			_ = sql.db.Del("cdsheet", "WHERE GroupID = ?", gid[0])
 		}
 		return err
 	}

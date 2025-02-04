@@ -18,7 +18,6 @@ import (
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
-	imagepool "github.com/FloatTech/zbputils/img/pool"
 )
 
 const (
@@ -32,7 +31,7 @@ var (
 )
 
 func init() {
-	en := control.Register("lolicon", &ctrl.Options[*zero.Ctx]{
+	en := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "随机图片",
 		Help: "- 随机图片\n" +
@@ -68,18 +67,7 @@ func init() {
 						ctx.SendChain(message.Text("ERROR: ", err))
 						continue
 					}
-					name := imageurl[strings.LastIndex(imageurl, "/")+1 : len(imageurl)-4]
-					m, err := imagepool.GetImage(name)
-					if err != nil {
-						m.SetFile(imageurl)
-						_, _ = m.Push(ctxext.SendToSelf(ctx), ctxext.GetMessage(ctx))
-						process.SleepAbout1sTo2s()
-					}
-					if err == nil {
-						queue <- m.String()
-					} else {
-						queue <- imageurl
-					}
+					queue <- imageurl
 				}
 			}()
 			select {
@@ -115,5 +103,5 @@ func getimgurl(url string) (string, error) {
 	if imageurl = json.Get("data.0.urls.original").Str; imageurl == "" {
 		return "", errors.New("未找到相关内容, 换个tag试试吧")
 	}
-	return strings.ReplaceAll(imageurl, "i.pixiv.cat", "i.pixiv.re"), nil
+	return imageurl, nil
 }

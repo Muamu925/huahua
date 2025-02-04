@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/FloatTech/floatbox/file"
-	"github.com/FloatTech/floatbox/img/writer"
+	"github.com/FloatTech/imgfactory"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
@@ -17,7 +17,7 @@ import (
 )
 
 func init() { // 插件主体
-	engine := control.Register("danbooru", &ctrl.Options[*zero.Ctx]{
+	engine := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault:  false,
 		Brief:             "二次元图片标签识别",
 		Help:              "- 鉴赏图片[图片]",
@@ -39,7 +39,7 @@ func init() { // 插件主体
 				digest := md5.Sum(helper.StringToBytes(url))
 				f := cachefolder + hex.EncodeToString(digest[:])
 				if file.IsNotExist(f) {
-					_ = writer.SavePNG2Path(f, t)
+					_ = imgfactory.SavePNG2Path(f, t)
 				}
 				m := message.Message{ctxext.FakeSenderForwardNode(ctx, message.Image("file:///"+file.BOTPATH+"/"+f))}
 				m = append(m, ctxext.FakeSenderForwardNode(ctx, message.Text("tags: ", strings.Join(st.tseq, ","))))

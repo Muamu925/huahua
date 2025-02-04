@@ -7,3 +7,6 @@ go-zero*
 nohup.out
 zerobot
 ZeroBot-Plugin*
+*.syso
+/.direnv
+/result

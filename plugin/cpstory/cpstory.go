@@ -11,12 +11,13 @@ import (
 
 	fcext "github.com/FloatTech/floatbox/ctxext"
 	"github.com/FloatTech/floatbox/math"
+	sql "github.com/FloatTech/sqlite"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 )
 
 func init() {
-	engine := control.Register("cpstory", &ctrl.Options[*zero.Ctx]{
+	engine := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "cp短打", // 这里也许有更好的名字
 		Help:             "- 组cp[@xxx][@xxx]\n- 磕cp大老师 雪乃",
@@ -24,10 +25,10 @@ func init() {
 	})
 
 	getdb := fcext.DoOnceOnSuccess(func(ctx *zero.Ctx) bool {
-		db.DBPath = engine.DataFolder() + "cp.db"
+		db = sql.New(engine.DataFolder() + "cp.db")
 		// os.RemoveAll(dbpath)
 		_, _ = engine.GetLazyData("cp.db", true)
-		err := db.Open(time.Hour * 24)
+		err := db.Open(time.Hour)
 		if err != nil {
 			ctx.SendChain(message.Text("ERROR: ", err))
 			return false
@@ -53,7 +54,7 @@ func init() {
 		text := strings.ReplaceAll(cs.Story, "<攻>", gong)
 		text = strings.ReplaceAll(text, "<受>", shou)
 		text = strings.ReplaceAll(text, cs.Gong, gong)
-		text = strings.ReplaceAll(text, cs.Shou, gong)
+		text = strings.ReplaceAll(text, cs.Shou, shou)
 		ctx.SendChain(message.Text(text))
 	})
 	engine.OnPrefix("磕cp", getdb).SetBlock(true).Handle(func(ctx *zero.Ctx) {

@@ -11,16 +11,17 @@ import (
 	"github.com/wdvxdr1123/ZeroBot/utils/helper"
 
 	fcext "github.com/FloatTech/floatbox/ctxext"
+	sql "github.com/FloatTech/sqlite"
 	ctrl "github.com/FloatTech/zbpctrl"
 	"github.com/FloatTech/zbputils/control"
 	"github.com/FloatTech/zbputils/ctxext"
 	"github.com/FloatTech/zbputils/img/text"
 )
 
-const bed = "https://gitcode.net/u011570312/senso-ji-omikuji/-/raw/main/"
+const bed = "https://gitea.seku.su/fumiama/senso-ji-omikuji/raw/branch/main/"
 
 func init() { // 插件主体
-	engine := control.Register("omikuji", &ctrl.Options[*zero.Ctx]{
+	engine := control.AutoRegister(&ctrl.Options[*zero.Ctx]{
 		DisableOnDefault: false,
 		Brief:            "浅草寺求签",
 		Help:             "- 求签 | 占卜\n- 解签",
@@ -48,13 +49,13 @@ func init() { // 插件主体
 		})
 	engine.OnFullMatch("解签", fcext.DoOnceOnSuccess(
 		func(ctx *zero.Ctx) bool {
-			db.DBPath = engine.DataFolder() + "kuji.db"
+			db = sql.New(engine.DataFolder() + "kuji.db")
 			_, err := engine.GetLazyData("kuji.db", true)
 			if err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return false
 			}
-			err = db.Open(time.Hour * 24)
+			err = db.Open(time.Hour)
 			if err != nil {
 				ctx.SendChain(message.Text("ERROR: ", err))
 				return false
