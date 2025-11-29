@@ -69,7 +69,7 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/custom"                   // 自定义插件合集
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ahsai"             // ahsai tts
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/aifalse"           // 服务器监控
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/aiimage"           // AI画图
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/aiimage"           // AI画图
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/aiwife"            // 随机老婆
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/alipayvoice"       // 支付宝到账语音
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/animetrace"        // AnimeTrace 动画/Galgame识别
@@ -113,7 +113,7 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/jptingroom"        // 日语听力学习材料
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/kfccrazythursday"  // 疯狂星期四
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/lolicon"           // lolicon 随机图片
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/lolimi"            // 桑帛云 API
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/lolimi"            // 桑帛云 API
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/magicprompt"       // magicprompt吟唱提示
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/mcfish"            // 钓鱼模拟器
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/midicreate"        // 简易midi音乐制作
@@ -122,15 +122,15 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/moyu"              // 摸鱼
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/moyucalendar"      // 摸鱼人日历
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/music"             // 点歌
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/nativesetu"        // 本地涩图
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/nativesetu"        // 本地涩图
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/nbnhhsh"           // 拼音首字母缩写释义工具
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/nihongo"           // 日语语法学习
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/niuniu"            // 牛牛大作战
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/niuniu"            // 牛牛大作战
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/novel"             // 铅笔小说网搜索
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/nsfw"              // nsfw图片识别
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/nwife"             // 本地老婆
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/nwife"             // 本地老婆
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/omikuji"           // 浅草寺求签
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/poker"             // 抽扑克
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/poker"             // 抽扑克
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/qqwife"            // 一群一天一夫一妻制群老婆
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/qzone"             // qq空间表白墙
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/realcugan"         // realcugan清晰术
@@ -140,8 +140,8 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/runcode"           // 在线运行代码
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/saucenao"          // 以图搜图
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/score"             // 分数
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/setutime"          // 来份涩图
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/shadiao"           // 沙雕app
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/setutime"          // 来份涩图
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/shadiao"           // 沙雕app
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/shindan"           // 测定
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/steam"             // steam相关
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/tarot"             // 抽塔罗牌
@@ -156,8 +156,8 @@ import (
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/wordle"            // 猜单词
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ygocdb"            // 游戏王白鸽API卡查
 	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ygotrade"          // 游戏王集换社卡价查询
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ymgal"             // 月幕galgame
-	_ "github.com/FloatTech/ZeroBot-Plugin/plugin/yujn"              // 遇见API
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/ymgal"             // 月幕galgame
+	//_ "github.com/FloatTech/ZeroBot-Plugin/plugin/yujn"              // 遇见API
 
 	// _ "github.com/FloatTech/ZeroBot-Plugin/plugin/wtf"           // 鬼东西
 
@@ -232,7 +232,7 @@ func init() {
 	// 直接写死 URL 时，请更改下面第二个参数
 	url := flag.String("u", "ws://127.0.0.1:6700", "Set Url of WSClient.")
 	// 默认昵称
-	adana := flag.String("n", "椛椛", "Set default nickname.")
+	adana := flag.String("n", "桦桦", "Set default nickname.")
 	prefix := flag.String("p", "/", "Set command prefix.")
 	runcfg := flag.String("c", "", "Run from config file.")
 	save := flag.String("s", "", "Save default config to file and exit.")
@@ -265,7 +265,7 @@ func init() {
 	}
 
 	// 通过代码写死的方式添加主人账号
-	// sus = append(sus, 12345678)
+	sus = append(sus, 1163320162)
 	// sus = append(sus, 87654321)
 
 	// 启用 webui
